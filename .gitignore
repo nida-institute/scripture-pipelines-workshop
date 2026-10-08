@@ -1,0 +1,6 @@
+# What a pipeline run writes on the way to its deliverables (rule separate-output-from-intermediates)
+intermediate/
+llmflow.log
+
+# Throwaway files: commit messages, issue drafts, scratch notes
+tmp/
