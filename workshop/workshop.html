@@ -1,0 +1,1610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Workshop — directing AI with Human at the Helm and Scripture Pipelines</title>
+<meta name="description" content="A workshop on directing AI with Human at the Helm and Scripture Pipelines: Getting started; Your project on GitHub; The sample pipeline; The written record; Drift.">
+<style>
+:root {
+  --bg: #fbfaf7; --fg: #1d1d1b; --muted: #6b6a66; --line: #dedbd3; --nav-bg: #f2f0ea;
+  --link: #1f5f99; --code-bg: #efece4;
+  --both: #2e6b3f; --sp: #7a4a12; --helm: #4a3a8a;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1b1b1a; --fg: #e8e6e1; --muted: #a09e98; --line: #3a3936; --nav-bg: #232321;
+    --link: #8cb8e6; --code-bg: #2b2a27;
+    --both: #8fd19e; --sp: #e8b77a; --helm: #b9aaf0;
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-padding-top: 1rem; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial,
+    "Noto Sans", "SBL Greek", "Gentium Plus", "Times New Roman", serif;
+}
+a { color: var(--link); }
+#toc {
+  position: fixed; top: 0; left: 0; bottom: 0; width: 17rem; overflow-y: auto;
+  padding: 1rem; background: var(--nav-bg); border-right: 1px solid var(--line); font-size: 0.92rem;
+}
+#toc h1 { font-size: 1rem; margin: 0 0 0.75rem; }
+#toc ul { list-style: none; margin: 0; padding: 0; }
+#toc > ul > li { margin: 0.35rem 0; }
+#toc .num { display: inline-block; min-width: 1.6rem; font-weight: 600; }
+#toc details { margin: 0.1rem 0 0 1.6rem; }
+#toc summary { cursor: pointer; color: var(--muted); font-size: 0.85rem; }
+#toc details ul { margin: 0.25rem 0 0.4rem; }
+#toc details li { margin: 0.15rem 0; }
+#toc details li.h3 { padding-left: 0.9rem; }
+#toc .save { display: block; margin-top: 1.5rem; padding-top: 0.75rem; border-top: 1px solid var(--line); }
+#toc .save small { display: block; color: var(--muted); }
+main { margin-left: 17rem; padding: 1.5rem 2.5rem 4rem; max-width: 60rem; }
+.lesson { display: none; }
+.lesson:target, .lesson:has(:target) { display: block; }
+body:not(:has(:target)) #readme { display: block; }
+table { border-collapse: collapse; margin: 1rem 0; }
+th, td { border: 1px solid var(--line); padding: 0.35rem 0.6rem; vertical-align: top; text-align: left; }
+code { background: var(--code-bg); padding: 0 0.2rem; border-radius: 3px; }
+pre { background: var(--code-bg); padding: 0.75rem; overflow-x: auto; border-radius: 4px; }
+pre code { padding: 0; }
+blockquote { margin-left: 0; padding-left: 1rem; border-left: 3px solid var(--line); color: var(--muted); }
+.tag {
+  display: inline-block; font-size: 0.72em; font-weight: 600; padding: 0 0.4em; border-radius: 3px;
+  border: 1px solid currentColor; vertical-align: 0.1em; white-space: nowrap;
+}
+.tag.both { color: var(--both); } .tag.sp { color: var(--sp); } .tag.helm { color: var(--helm); }
+@media (max-width: 820px) {
+  #toc { position: static; width: auto; border-right: 0; border-bottom: 1px solid var(--line); }
+  main { margin-left: 0; padding: 1rem; }
+}
+</style>
+</head>
+<body>
+<nav id="toc">
+<h1>Workshop</h1>
+<ul>
+<li>
+  <a href="#readme"><span class="num">·</span>About this workshop</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#readme-how-the-workshop-runs">How the workshop runs</a></li>
+      <li class="h2"><a href="#readme-teaching-the-workshop">Teaching the workshop</a></li>
+      <li class="h2"><a href="#readme-working-on-your-own">Working on your own</a></li>
+      <li class="h2"><a href="#readme-lessons">Lessons</a></li>
+      <li class="h2"><a href="#readme-the-lesson-template">The lesson template</a></li>
+    </ul>
+  </details>
+</li>
+<li>
+  <a href="#lesson-1"><span class="num">1</span>Getting started</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#lesson-1-0-why-this-lesson">0. Why this lesson</a></li>
+      <li class="h2"><a href="#lesson-1-1-the-core-idea">1. The core idea</a></li>
+      <li class="h2"><a href="#lesson-1-2-what-you-start-with">2. What you start with</a></li>
+      <li class="h2"><a href="#lesson-1-3-what-you-produce">3. What you produce</a></li>
+      <li class="h2"><a href="#lesson-1-4-steps">4. Steps</a></li>
+      <li class="h3"><a href="#lesson-1-40-both-how-the-workshop-runs">4.0 <span class="tag both">Both</span> How the workshop runs</a></li>
+      <li class="h3"><a href="#lesson-1-41-both-install-claude--choose-one">4.1 <span class="tag both">Both</span> Install Claude — choose one</a></li>
+      <li class="h3"><a href="#lesson-1-42-sp-only-install-scripture-pipelines--with-claude-walking-you-through-it">4.2 <span class="tag sp">sp only</span> Install Scripture Pipelines — with Claude walking you through it</a></li>
+      <li class="h3"><a href="#lesson-1-42-helm-only-install-human-at-the-helm-into-your-project">4.2 <span class="tag helm">Helm only</span> Install Human at the Helm into your project</a></li>
+      <li class="h3"><a href="#lesson-1-43-both-load-context--have-claude-read-the-projects-rules-first">4.3 <span class="tag both">Both</span> /load-context — have Claude read the project&#x27;s rules first</a></li>
+      <li class="h3"><a href="#lesson-1-44-both-health-check--is-this-session-still-working-well">4.4 <span class="tag both">Both</span> /health-check — is this session still working well?</a></li>
+      <li class="h3"><a href="#lesson-1-45-both-handoff--write-down-what-the-next-session-needs">4.5 <span class="tag both">Both</span> /handoff — write down what the next session needs</a></li>
+      <li class="h3"><a href="#lesson-1-46-both-commit-ready--is-the-work-ready-to-be-saved">4.6 <span class="tag both">Both</span> /commit-ready — is the work ready to be saved?</a></li>
+      <li class="h3"><a href="#lesson-1-47-both-stage-commits--claude-prepares-the-save-you-make-it">4.7 <span class="tag both">Both</span> /stage-commits — Claude prepares the save; you make it</a></li>
+      <li class="h3"><a href="#lesson-1-48-both-exit--end-the-session">4.8 <span class="tag both">Both</span> /exit — end the session</a></li>
+      <li class="h3"><a href="#lesson-1-49-both-restart">4.9 <span class="tag both">Both</span> Restart</a></li>
+      <li class="h3"><a href="#lesson-1-410-both-the-other-modes-of-the-app-chat-and-cowork">4.10 <span class="tag both">Both</span> The other modes of the app: Chat and Cowork</a></li>
+      <li class="h2"><a href="#lesson-1-5-how-you-know-it-worked">5. How you know it worked</a></li>
+      <li class="h2"><a href="#lesson-1-6-non-goals">6. Non-goals</a></li>
+      <li class="h2"><a href="#lesson-1-7-teaching-this-lesson">7. Teaching this lesson</a></li>
+      <li class="h3"><a href="#lesson-1-before-the-day">Before the day</a></li>
+      <li class="h3"><a href="#lesson-1-introducing-each-step">Introducing each step</a></li>
+      <li class="h3"><a href="#lesson-1-where-people-get-stuck">Where people get stuck</a></li>
+      <li class="h3"><a href="#lesson-1-before-moving-the-room-on">Before moving the room on</a></li>
+    </ul>
+  </details>
+</li>
+<li>
+  <a href="#lesson-2"><span class="num">2</span>Your project on GitHub</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#lesson-2-0-why-this-lesson">0. Why this lesson</a></li>
+      <li class="h2"><a href="#lesson-2-1-the-core-idea">1. The core idea</a></li>
+      <li class="h2"><a href="#lesson-2-2-what-you-start-with">2. What you start with</a></li>
+      <li class="h2"><a href="#lesson-2-3-what-you-produce">3. What you produce</a></li>
+      <li class="h2"><a href="#lesson-2-4-steps">4. Steps</a></li>
+      <li class="h3"><a href="#lesson-2-41-both-make-the-project-a-repository-with-claudes-guidance">4.1 <span class="tag both">Both</span> Make the project a repository, with Claude&#x27;s guidance</a></li>
+      <li class="h3"><a href="#lesson-2-42-both-put-it-on-github--in-your-own-terminal">4.2 <span class="tag both">Both</span> Put it on GitHub — in your own terminal</a></li>
+      <li class="h3"><a href="#lesson-2-43-both-install-the-claude-github-app">4.3 <span class="tag both">Both</span> Install the Claude GitHub App</a></li>
+      <li class="h3"><a href="#lesson-2-44-both-give-the-ai-its-own-github-account">4.4 <span class="tag both">Both</span> Give the AI its own GitHub account</a></li>
+      <li class="h3"><a href="#lesson-2-45-both-issues--drafted-by-claude-created-by-you">4.5 <span class="tag both">Both</span> Issues — drafted by Claude, created by you</a></li>
+      <li class="h3"><a href="#lesson-2-46-both-a-project-board-with-four-columns">4.6 <span class="tag both">Both</span> A project board with four columns</a></li>
+      <li class="h3"><a href="#lesson-2-47-both-todomd--the-task-list-claude-reads-first">4.7 <span class="tag both">Both</span> TODO.md — the task list Claude reads first</a></li>
+      <li class="h3"><a href="#lesson-2-48-both-changelog--the-dated-record-of-what-changed">4.8 <span class="tag both">Both</span> CHANGELOG — the dated record of what changed</a></li>
+      <li class="h3"><a href="#lesson-2-49-both-read-what-the-skills-and-ai-context-actually-say">4.9 <span class="tag both">Both</span> Read what the skills and AI context actually say</a></li>
+      <li class="h2"><a href="#lesson-2-5-how-you-know-it-worked">5. How you know it worked</a></li>
+      <li class="h2"><a href="#lesson-2-6-non-goals">6. Non-goals</a></li>
+      <li class="h2"><a href="#lesson-2-7-teaching-this-lesson">7. Teaching this lesson</a></li>
+      <li class="h3"><a href="#lesson-2-before-the-day">Before the day</a></li>
+      <li class="h3"><a href="#lesson-2-introducing-each-step">Introducing each step</a></li>
+      <li class="h3"><a href="#lesson-2-where-people-get-stuck">Where people get stuck</a></li>
+      <li class="h3"><a href="#lesson-2-before-moving-the-room-on">Before moving the room on</a></li>
+    </ul>
+  </details>
+</li>
+<li>
+  <a href="#lesson-3"><span class="num">3</span>The sample pipeline</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#lesson-3-0-why-this-lesson">0. Why this lesson</a></li>
+      <li class="h2"><a href="#lesson-3-1-the-core-idea">1. The core idea</a></li>
+      <li class="h2"><a href="#lesson-3-2-what-you-start-with">2. What you start with</a></li>
+      <li class="h2"><a href="#lesson-3-3-what-you-produce">3. What you produce</a></li>
+      <li class="h2"><a href="#lesson-3-4-steps">4. Steps</a></li>
+      <li class="h3"><a href="#lesson-3-41-make-the-samples-texts-available--and-agree-to-their-licences-yourself">4.1 Make the sample&#x27;s texts available — and agree to their licences yourself</a></li>
+      <li class="h3"><a href="#lesson-3-42-read-the-pipeline--with-claude">4.2 Read the pipeline — with Claude</a></li>
+      <li class="h3"><a href="#lesson-3-43-the-kinds-of-step">4.3 The kinds of step</a></li>
+      <li class="h3"><a href="#lesson-3-44-what-costs-money--and-how-much">4.4 What costs money — and how much</a></li>
+      <li class="h3"><a href="#lesson-3-45-check-it-for-free-sp-lint-and---dry-run">4.5 Check it for free: sp lint and --dry-run</a></li>
+      <li class="h3"><a href="#lesson-3-46-run-it--when-you-decide-to">4.6 Run it — when you decide to</a></li>
+      <li class="h3"><a href="#lesson-3-47-read-what-it-produced">4.7 Read what it produced</a></li>
+      <li class="h2"><a href="#lesson-3-5-how-you-know-it-worked">5. How you know it worked</a></li>
+      <li class="h2"><a href="#lesson-3-6-non-goals">6. Non-goals</a></li>
+      <li class="h2"><a href="#lesson-3-7-teaching-this-lesson">7. Teaching this lesson</a></li>
+      <li class="h3"><a href="#lesson-3-before-the-day">Before the day</a></li>
+      <li class="h3"><a href="#lesson-3-introducing-each-step">Introducing each step</a></li>
+      <li class="h3"><a href="#lesson-3-where-people-get-stuck">Where people get stuck</a></li>
+      <li class="h3"><a href="#lesson-3-before-moving-the-room-on">Before moving the room on</a></li>
+    </ul>
+  </details>
+</li>
+<li>
+  <a href="#lesson-4"><span class="num">4</span>The written record</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#lesson-4-0-why-this-lesson">0. Why this lesson</a></li>
+      <li class="h2"><a href="#lesson-4-1-the-core-idea">1. The core idea</a></li>
+      <li class="h2"><a href="#lesson-4-2-what-you-start-with">2. What you start with</a></li>
+      <li class="h2"><a href="#lesson-4-3-what-you-produce">3. What you produce</a></li>
+      <li class="h2"><a href="#lesson-4-4-steps">4. Steps</a></li>
+      <li class="h3"><a href="#lesson-4-41-both-before-any-change-authorize">4.1 <span class="tag both">Both</span> Before any change: /authorize</a></li>
+      <li class="h3"><a href="#lesson-4-42-both-plans--proposals-until-you-rule-them">4.2 <span class="tag both">Both</span> Plans — proposals, until you rule them</a></li>
+      <li class="h3"><a href="#lesson-4-43-both-specifications--the-design-that-outlasts-the-work">4.3 <span class="tag both">Both</span> Specifications — the design that outlasts the work</a></li>
+      <li class="h3"><a href="#lesson-4-44-both-audits--findings-never-verdicts">4.4 <span class="tag both">Both</span> Audits — findings, never verdicts</a></li>
+      <li class="h3"><a href="#lesson-4-45-both-issues--a-decision-about-what-to-work-on">4.5 <span class="tag both">Both</span> Issues — a decision about what to work on</a></li>
+      <li class="h3"><a href="#lesson-4-46-both-tmp--throwaway-but-not-anyones-to-sweep">4.6 <span class="tag both">Both</span> tmp/ — throwaway, but not anyone&#x27;s to sweep</a></li>
+      <li class="h3"><a href="#lesson-4-47-both-where-everything-lives">4.7 <span class="tag both">Both</span> Where everything lives</a></li>
+      <li class="h2"><a href="#lesson-4-5-how-you-know-it-worked">5. How you know it worked</a></li>
+      <li class="h2"><a href="#lesson-4-6-non-goals">6. Non-goals</a></li>
+      <li class="h2"><a href="#lesson-4-7-teaching-this-lesson">7. Teaching this lesson</a></li>
+      <li class="h3"><a href="#lesson-4-before-the-day">Before the day</a></li>
+      <li class="h3"><a href="#lesson-4-introducing-each-step">Introducing each step</a></li>
+      <li class="h3"><a href="#lesson-4-where-people-get-stuck">Where people get stuck</a></li>
+      <li class="h3"><a href="#lesson-4-before-moving-the-room-on">Before moving the room on</a></li>
+    </ul>
+  </details>
+</li>
+<li>
+  <a href="#lesson-5"><span class="num">5</span>Drift</a>
+  <details>
+    <summary>Sections</summary>
+    <ul>
+      <li class="h2"><a href="#lesson-5-0-why-this-lesson">0. Why this lesson</a></li>
+      <li class="h2"><a href="#lesson-5-1-the-core-idea">1. The core idea</a></li>
+      <li class="h2"><a href="#lesson-5-2-what-you-start-with">2. What you start with</a></li>
+      <li class="h2"><a href="#lesson-5-3-what-you-produce">3. What you produce</a></li>
+      <li class="h2"><a href="#lesson-5-4-steps">4. Steps</a></li>
+      <li class="h3"><a href="#lesson-5-41-both-the-patterns">4.1 <span class="tag both">Both</span> The patterns</a></li>
+      <li class="h3"><a href="#lesson-5-42-both-the-guards-you-have-already-used">4.2 <span class="tag both">Both</span> The guards you have already used</a></li>
+      <li class="h3"><a href="#lesson-5-43-both-enforced-or-only-asked">4.3 <span class="tag both">Both</span> Enforced, or only asked?</a></li>
+      <li class="h3"><a href="#lesson-5-44-both-where-the-guards-do-not-reach">4.4 <span class="tag both">Both</span> Where the guards do not reach</a></li>
+      <li class="h3"><a href="#lesson-5-45-both-when-drift-has-happened-stand-down">4.5 <span class="tag both">Both</span> When drift has happened: /stand-down</a></li>
+      <li class="h3"><a href="#lesson-5-46-both-find-one-in-your-own-sessions">4.6 <span class="tag both">Both</span> Find one in your own sessions</a></li>
+      <li class="h2"><a href="#lesson-5-5-how-you-know-it-worked">5. How you know it worked</a></li>
+      <li class="h2"><a href="#lesson-5-6-non-goals">6. Non-goals</a></li>
+      <li class="h2"><a href="#lesson-5-7-teaching-this-lesson">7. Teaching this lesson</a></li>
+      <li class="h3"><a href="#lesson-5-before-the-day">Before the day</a></li>
+      <li class="h3"><a href="#lesson-5-introducing-each-step">Introducing each step</a></li>
+      <li class="h3"><a href="#lesson-5-where-people-get-stuck">Where people get stuck</a></li>
+      <li class="h3"><a href="#lesson-5-before-moving-the-room-on">Before moving the room on</a></li>
+    </ul>
+  </details>
+</li>
+</ul>
+<a class="save" href="workshop.html" download="workshop.html">Save this page to read offline<small>One file, with every lesson. It works without an internet connection.</small></a>
+</nav>
+<main>
+<section class="lesson" id="readme">
+<h1 id="readme-workshop--directing-ai-with-scripture-pipelines">Workshop — directing AI with Scripture Pipelines</h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> each amendment is dated, gives its reason, and goes at the top of this list.</p>
+<ul>
+<li><strong>2026-10-07 — two tracks.</strong> The same materials serve Human at the Helm and Scripture Pipelines, so every part of every lesson is labelled <span class="tag both">Both</span>, <span class="tag sp">sp only</span> or <span class="tag helm">Helm only</span>.</li>
+<li><strong>2026-10-07 — two goals added.</strong> Anyone who has taken the workshop must be able to teach it, and anyone who cannot attend must be able to work through it alone. So nothing may live only in an instructor's head: every lesson carries its own teaching notes (§7), and every step must make sense without being introduced.</li>
+</ul>
+<p><strong>Audience:</strong> a mixed room. Scholars who know the texts and data but are new to directing an AI, and technical staff who are comfortable with a terminal, git and YAML. Every lesson serves both.</p>
+<p><strong>Two tracks: Scripture Pipelines and Human at the Helm.</strong> The same materials serve both. <a href="https://github.com/nida-institute/human-at-the-helm">Human at the Helm</a> is the methodology — keeping the person in charge of an AI's work, in any project. Scripture Pipelines (<code>sp</code>) is an engine for biblical and linguistic pipelines that ships the methodology with it. Every part of every lesson is labelled:</p>
+<ul>
+<li><strong><span class="tag both">Both</span></strong> — for everyone.</li>
+<li><strong><span class="tag sp">sp only</span></strong> — Scripture Pipelines participants only; Helm participants skip it.</li>
+<li><strong><span class="tag helm">Helm only</span></strong> — Helm participants only, usually in place of an <code>sp only</code> part beside it.</li>
+</ul>
+<p>A lesson's header says which track it serves; a step's label is at the start of its heading; a single line or table row that differs is labelled inline.</p>
+<p><strong>Terminal or app.</strong> Every action can be done from the Claude Code command line or from the Code tab of the Claude desktop app. Lesson 1 (§4.1, <em>Terminal or app</em>) has the table showing where each action happens in each, including what "your own terminal" means in both — and every later lesson relies on it.</p>
+<p><strong>The two goals.</strong></p>
+<ol type="1">
+<li><strong>Anyone who has taken the workshop can teach it.</strong> Everything an instructor needs is in the lesson files themselves.</li>
+<li><strong>Anyone can work through it alone.</strong> The materials do not depend on an instructor or a partner being in the room.</li>
+</ol>
+<p><strong>How the lessons are written.</strong> Each lesson follows the same template, modelled on the way Scripture Pipelines writes its durable specifications: a stated audience, a vocabulary, numbered sections, a check you can carry out yourself, an explicit list of what the lesson leaves out, and notes for whoever teaches it.</p>
+<p><strong>The language rule (applies to every lesson).</strong> Jargon is never the only form of a point. Every technical term is glossed in plain words the first time a lesson uses it, and every Greek or Hebrew term is shown with a translation.</p>
+<hr />
+<h2 id="readme-how-the-workshop-runs">How the workshop runs</h2>
+<p>The instructor introduces each section and is there to help throughout. Participants work in pairs, discussing the materials, the pipelines, what Claude proposes and anything else that comes up. Claude is used as a guide: when a step is unclear, participants ask it to explain or walk them through it.</p>
+<h2 id="readme-teaching-the-workshop">Teaching the workshop</h2>
+<p>If you have taken the workshop, you can teach it. For each lesson:</p>
+<ol type="1">
+<li><strong>Before the day</strong>, read the whole lesson, then its <strong>§7 Teaching this lesson</strong>, and do the setup it lists — participants who arrive without a paid Claude plan or a model API key cannot take part, so tell them in advance.</li>
+<li><strong>On the day</strong>, introduce each step with the sentences in §7, let pairs work, and walk the room. §7 lists where people usually get stuck and what gets them moving again.</li>
+<li><strong>Before moving on</strong>, run the <strong>§5 checks</strong> out loud with the room. A pair that fails a check catches up before the next section, because each step builds on the one before.</li>
+<li><strong>Afterwards</strong>, if something went differently from what §7 predicted, add it to §7 as a dated amendment, so the next instructor knows.</li>
+</ol>
+<p>The times in §7 are estimates; correct them from experience.</p>
+<h2 id="readme-working-on-your-own">Working on your own</h2>
+<p>You can take the workshop without attending one.</p>
+<ul>
+<li><strong>Claude takes your partner's place.</strong> Explain to Claude what you are about to do and ask it to question your understanding; ask it to explain anything you do not follow.</li>
+<li><strong>The §5 checks take the instructor's place.</strong> Do not move on until every check in a lesson passes.</li>
+<li><strong>§7 is for you too.</strong> Its introductions and its list of where people get stuck are written for instructors, but they are just as useful read alone.</li>
+<li><strong>You arrange your own prerequisites:</strong> a paid Claude plan and a model API key (Lesson 1, §2).</li>
+<li><strong>If you are stuck,</strong> open an issue on <a href="https://github.com/nida-institute/LLMFlow/issues">the Scripture Pipelines repository</a> describing what you did, what you expected, and what happened instead.</li>
+</ul>
+<hr />
+<h2 id="readme-lessons">Lessons</h2>
+<table>
+<thead>
+<tr class="header">
+<th>#</th>
+<th>Lesson</th>
+<th>Track</th>
+<th>What you leave with</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><a href="#lesson-1">Getting started</a></td>
+<td>Both, with an install step for each</td>
+<td>Claude and Scripture Pipelines installed, a project set up, and the commands that open and close a session safely</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><a href="#lesson-2">Your project on GitHub</a></td>
+<td>Both</td>
+<td>Your repository on GitHub, an AI agent account working under its own name, the Claude GitHub App, a board, issues, <code>TODO.md</code>, a CHANGELOG — and a reading of what the skills actually say</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><a href="#lesson-3">The sample pipeline</a></td>
+<td>sp only</td>
+<td>The sample pipeline read, checked for free, and run on a passage you chose — knowing which steps cost money and why</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><a href="#lesson-4">The written record</a></td>
+<td>Both</td>
+<td>Plans you rule on, specifications, audits without verdicts, issues you create, and <code>tmp/</code> — and where each lives</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><a href="#lesson-5">Drift</a></td>
+<td>Both</td>
+<td>The drift patterns named, which of <code>sp</code>'s guards your machine actually enforces, and what to do when drift has happened</td>
+</tr>
+<tr class="even">
+<td>6</td>
+<td><em>(to come)</em> — the catalog of biblical data</td>
+<td>sp only</td>
+<td>Finding, licensing and downloading datasets, and suggesting new ones</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="readme-the-lesson-template">The lesson template</h2>
+<div class="sourceCode" id="readme-cb1"><pre class="sourceCode markdown"><code class="sourceCode markdown"><span id="readme-cb1-1"><a href="#readme-cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Lesson N — &lt;title&gt;</span></span>
+<span id="readme-cb1-2"><a href="#readme-cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="readme-cb1-3"><a href="#readme-cb1-3" aria-hidden="true" tabindex="-1"></a>**Status:** proposed (<span class="dt">&lt;</span><span class="kw">date</span><span class="dt">&gt;</span>)</span>
+<span id="readme-cb1-4"><a href="#readme-cb1-4" aria-hidden="true" tabindex="-1"></a>**Amendments:** (dated, with the reason, newest first)</span>
+<span id="readme-cb1-5"><a href="#readme-cb1-5" aria-hidden="true" tabindex="-1"></a>**Track:** Both | sp only — every step heading starts with <span class="co">[</span><span class="ot">Both</span><span class="co">]</span>, <span class="co">[</span><span class="ot">sp only</span><span class="co">]</span> or <span class="co">[</span><span class="ot">Helm only</span><span class="co">]</span></span>
+<span id="readme-cb1-6"><a href="#readme-cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="readme-cb1-7"><a href="#readme-cb1-7" aria-hidden="true" tabindex="-1"></a>**Audience:** what a scholar needs from this lesson / what a technical participant needs</span>
+<span id="readme-cb1-8"><a href="#readme-cb1-8" aria-hidden="true" tabindex="-1"></a>**Vocabulary:** each term used, glossed once in plain words</span>
+<span id="readme-cb1-9"><a href="#readme-cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="readme-cb1-10"><a href="#readme-cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## 0. Why this lesson        — the problem it solves, in the participant&#39;s terms</span></span>
+<span id="readme-cb1-11"><a href="#readme-cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1. The core idea          — the one thing to take away</span></span>
+<span id="readme-cb1-12"><a href="#readme-cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2. What you start with    — files, prerequisites, prior lessons</span></span>
+<span id="readme-cb1-13"><a href="#readme-cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3. What you produce       — the concrete result at the end</span></span>
+<span id="readme-cb1-14"><a href="#readme-cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4. Steps                  — each one understandable without an instructor</span></span>
+<span id="readme-cb1-15"><a href="#readme-cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5. How you know it worked — a check you carry out, not one you take on trust</span></span>
+<span id="readme-cb1-16"><a href="#readme-cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## 6. Non-goals              — what this lesson deliberately leaves out</span></span>
+<span id="readme-cb1-17"><a href="#readme-cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 7. Teaching this lesson   — setup beforehand, an introduction for each step,</span></span>
+<span id="readme-cb1-18"><a href="#readme-cb1-18" aria-hidden="true" tabindex="-1"></a>                               where people get stuck, times, what to check before moving on</span></code></pre></div>
+<p>Open questions for the workshop's author are written as a question followed by a line holding only <code>=&gt;</code>; the answer goes after the <code>=&gt;</code>. <strong>A lesson is not ready to teach or to study alone while it still holds an unanswered <code>=&gt;</code></strong>, because whoever meets it has nobody to answer it.</p>
+</section>
+<section class="lesson" id="lesson-1">
+<h1 id="lesson-1-lesson-1--getting-started-installing-claude-and-opening-and-closing-a-session-safely">Lesson 1 — Getting started: installing Claude, and opening and closing a session safely</h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> none yet. <strong>Track:</strong> Both. Step 4.2 has one version for each track; lines that differ are labelled.</p>
+<p><strong>Audience.</strong></p>
+<ul>
+<li><em>Scholars:</em> you will be able to start Claude on a project, have it read that project's rules before it does anything, and end a session without losing what it knew.</li>
+<li><em>Technical participants:</em> the same, plus where the configuration lives, which parts of it are enforced and which are only instructions, and why the desktop app's Cowork mode is a different thing from Claude Code.</li>
+</ul>
+<p><strong>Vocabulary.</strong></p>
+<ul>
+<li><strong>Claude Code</strong> — Claude working on files on your computer: reading them, editing them, running commands. It runs either in a terminal or in the Code tab of the Claude desktop app.</li>
+<li><strong>Terminal</strong> — the text window where you type commands (Terminal on a Mac).</li>
+<li><strong>Session</strong> — one conversation with Claude, from start to exit. Claude forgets everything when a session ends; only what is written in files survives.</li>
+<li><strong>Context</strong> — what Claude has in front of it during a session: the files it has read and the conversation so far. It is limited, and a long session gets condensed ("compacted"), losing detail.</li>
+<li><strong>Slash command</strong> — a command typed into Claude starting with <code>/</code>, such as <code>/exit</code>.</li>
+<li><strong>Skill</strong> — a written procedure that Claude follows when you type its slash command. Skills are files on your computer, so you can read exactly what each one tells Claude to do.</li>
+<li><strong><span class="tag sp">sp only</span> <code>sp</code></strong> — the Scripture Pipelines command. <code>sp init</code> sets up a project and installs the skills this workshop uses.</li>
+<li><strong><span class="tag helm">Helm only</span> <code>/install</code></strong> — Human at the Helm's installer, run from a copy of its repository. It sets up a project and installs the same skills.</li>
+<li><strong>Repository (repo)</strong> — a project folder whose history is tracked by git. Lesson 2.</li>
+<li><strong>Commit</strong> — a saved, named point in a repository's history. Lesson 2.</li>
+</ul>
+<hr />
+<h2 id="lesson-1-0-why-this-lesson">0. Why this lesson</h2>
+<p>An AI session starts with no memory of your project and ends by forgetting everything it learned. Left alone, it fills the first gap by guessing and loses the second without telling you. The commands in this lesson close both gaps: one makes Claude read the project's own rules before it starts, and the others make sure what it knows is written down before it stops.</p>
+<h2 id="lesson-1-1-the-core-idea">1. The core idea</h2>
+<p><strong>A session is temporary; the files are what last.</strong> Start every session by having Claude read the project's rules (<code>/load-context</code>). End it by writing down what matters (<code>/handoff</code>) and leaving the saving of your work in your own hands (<code>/stage-commits</code>). Restarting is cheap and normal — a fresh session that reads a good handoff usually works better than a long, tired one.</p>
+<h2 id="lesson-1-2-what-you-start-with">2. What you start with</h2>
+<ul>
+<li>A Mac (Windows and Linux are noted where they differ).</li>
+<li>A paid Claude plan. Claude Code is included in <strong>Pro, Max, Team and Enterprise</strong>, and through the <strong>Claude Console</strong> (pay-as-you-go API credits). It is <strong>not</strong> in the Free plan. (<a href="https://code.claude.com/docs/en/quickstart">quickstart</a>, <a href="https://claude.com/pricing">pricing</a>)</li>
+<li><strong><span class="tag sp">sp only</span></strong> An <strong>OpenAI</strong> API key. Scripture Pipelines calls models with it, separately from your Claude plan; the workshop has been tested with OpenAI's models.</li>
+<li><strong><span class="tag helm">Helm only</span></strong> <code>git</code>, to copy the Human at the Helm repository.</li>
+<li>A partner, if you are at a workshop — you work in pairs throughout. On your own, Claude takes the partner's place (4.0).</li>
+</ul>
+<p>At a workshop, the instructor will have told you in advance what to arrange. On your own, arrange it before you start: without the plan nothing in this lesson works, and on the sp track nothing runs without the key.</p>
+<h2 id="lesson-1-3-what-you-produce">3. What you produce</h2>
+<ul>
+<li>Claude Code running, in the terminal or the desktop app's Code tab.</li>
+<li><strong><span class="tag sp">sp only</span></strong> Scripture Pipelines installed, and a project folder set up with <code>sp init</code>.</li>
+<li><strong><span class="tag helm">Helm only</span></strong> A project folder set up with Human at the Helm's <code>/install</code>.</li>
+<li>One complete session cycle: start → <code>/load-context</code> → <code>/health-check</code> → <code>/handoff</code> → <code>/exit</code> → restart → <code>/load-context</code>.</li>
+<li>A <code>project/HANDOFF.md</code> file written by Claude, which you have read.</li>
+</ul>
+<h2 id="lesson-1-4-steps">4. Steps</h2>
+<h3 id="lesson-1-40-both-how-the-workshop-runs">4.0 <span class="tag both">Both</span> How the workshop runs</h3>
+<ul>
+<li><strong>The instructor introduces each section</strong> before you start it, and is there to help throughout. Ask whenever you are stuck.</li>
+<li><strong>Work in pairs.</strong> Talk through what you are doing with your partner: the workshop materials, the pipelines, what Claude proposes and why, and anything else that comes up. Two people reading Claude's report catch more than one.</li>
+<li><strong>Use Claude as your guide.</strong> When a step is unclear, ask Claude to explain it or walk you through it. Reading what it proposes before approving it is part of the lesson, not a delay.</li>
+</ul>
+<p><strong>On your own.</strong> Claude takes your partner's place: before each step, tell Claude what you are about to do and why, and ask it to question your understanding. The §5 checks take the instructor's place — do not move on until they pass. §7 below is written for instructors, but its introductions and its list of where people get stuck are just as useful read alone.</p>
+<h3 id="lesson-1-41-both-install-claude--choose-one">4.1 <span class="tag both">Both</span> Install Claude — choose one</h3>
+<p><strong>In the terminal.</strong> Run the installer:</p>
+<div class="sourceCode" id="lesson-1-cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-1-cb1-1"><a href="#lesson-1-cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-fsSL</span> https://claude.ai/install.sh <span class="kw">|</span> <span class="fu">bash</span></span></code></pre></div>
+<p>On Windows PowerShell: <code>irm https://claude.ai/install.ps1 | iex</code>. This version updates itself. (<a href="https://code.claude.com/docs/en/setup">setup</a>)</p>
+<p>Then make a new, empty folder for your workshop project and start Claude <em>in it</em> — the folder is how Claude knows which project it is working on:</p>
+<div class="sourceCode" id="lesson-1-cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-1-cb2-1"><a href="#lesson-1-cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> ~/workshop-project</span>
+<span id="lesson-1-cb2-2"><a href="#lesson-1-cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/workshop-project</span>
+<span id="lesson-1-cb2-3"><a href="#lesson-1-cb2-3" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div>
+<p>The first time, it asks you to sign in with your Claude account.</p>
+<p><strong>In the desktop app.</strong> Download the Claude app (<a href="https://claude.ai/api/desktop/darwin/universal/dmg/latest/redirect">Mac</a>, <a href="https://claude.ai/api/desktop/win32/x64/setup/latest/redirect">Windows</a>), sign in, and click the <strong>Code</strong> tab at the top. Choose <strong>Local</strong>, select your project folder, and start typing. (<a href="https://code.claude.com/docs/en/desktop-quickstart">desktop quickstart</a>)</p>
+<p><strong>The two are the same Claude Code.</strong> They read the same settings, the same project instructions and the same skills, so everything below works in both. The app also has a <strong>Chat</strong> and a <strong>Cowork</strong> mode, and those are different — see 4.10.</p>
+<h4 id="lesson-1-terminal-or-app-where-each-action-happens">Terminal or app: where each action happens</h4>
+<p>Every action in this workshop can be done either way. The lessons say what to do; this table says where, and applies to every lesson.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Action</th>
+<th>Terminal (Claude Code CLI)</th>
+<th>Desktop app (Code tab)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Start Claude in your project</td>
+<td><code>cd ~/workshop-project</code>, then <code>claude</code></td>
+<td><strong>Local</strong> → choose the folder → start typing</td>
+</tr>
+<tr class="even">
+<td>Start a second, fresh session</td>
+<td>a new terminal window, <code>claude</code></td>
+<td>Cmd+N (Ctrl+N on Windows)</td>
+</tr>
+<tr class="odd">
+<td>Run a slash command or skill</td>
+<td>type <code>/</code> and choose</td>
+<td>type <code>/</code> and choose — the same menu</td>
+</tr>
+<tr class="even">
+<td>Approve or refuse what Claude proposes</td>
+<td>answer the prompt in the terminal</td>
+<td>the approval card in the session</td>
+</tr>
+<tr class="odd">
+<td>Change the permission mode</td>
+<td>Shift+Tab</td>
+<td>the mode selector next to the send button</td>
+</tr>
+<tr class="even">
+<td>See what Claude changed</td>
+<td>ask Claude to show the diff, or <code>/diff</code></td>
+<td>click the <code>+12 −1</code> indicator to open the diff view</td>
+</tr>
+<tr class="odd">
+<td>Read a file</td>
+<td>open it in your editor, or ask Claude to show it</td>
+<td>click its path in the conversation</td>
+</tr>
+<tr class="even">
+<td><strong>Run a command as yourself</strong> — commit, push, create an issue, sign in, enter a key</td>
+<td><strong>a separate terminal window, outside Claude</strong></td>
+<td>the <strong>Terminal</strong> pane: Ctrl+` or <strong>Terminal</strong> in the title bar</td>
+</tr>
+<tr class="odd">
+<td>End the session</td>
+<td><code>/exit</code></td>
+<td>Cmd+W, or close it in the sidebar</td>
+</tr>
+<tr class="even">
+<td>Resume an earlier session</td>
+<td><code>claude --continue</code> (latest) or <code>claude --resume</code> (choose)</td>
+<td>click it in the sidebar; <code>/resume</code> also lists terminal sessions</td>
+</tr>
+<tr class="odd">
+<td>Change Claude Code's settings</td>
+<td>edit <code>~/.claude/settings.json</code> in an editor; <code>/config</code> for some</td>
+<td>edit <code>~/.claude/settings.json</code> in an editor; <strong>Settings → Claude Code</strong> for some</td>
+</tr>
+</tbody>
+</table>
+<p>(<a href="https://code.claude.com/docs/en/desktop">desktop</a>, <a href="https://code.claude.com/docs/en/permission-modes">permission modes</a>, <a href="https://code.claude.com/docs/en/sessions">sessions</a>)</p>
+<p><strong>"Your own terminal" means the row in bold above.</strong> When a lesson says to do something in your own terminal, it means a shell that is <em>you</em>, not Claude:</p>
+<ul>
+<li><strong>In the terminal version, do not use Claude's <code>!</code> prefix for these.</strong> A command typed after <code>!</code> runs inside Claude's session, with Claude's settings — so after Lesson 2 it would commit under the AI's name and sign in to GitHub as the AI's account. Use a separate terminal window.</li>
+<li><strong>In the app, the Terminal pane is your own shell.</strong> It does not take Claude's settings, so it acts as you. (This is described in Claude Code's issue tracker rather than its documentation; check it in Lesson 2 with <code>gh auth status</code>, which names the account in use.)</li>
+</ul>
+<h3 id="lesson-1-42-sp-only-install-scripture-pipelines--with-claude-walking-you-through-it">4.2 <span class="tag sp">sp only</span> Install Scripture Pipelines — with Claude walking you through it</h3>
+<p>The instructions are in Scripture Pipelines' own <a href="https://github.com/nida-institute/LLMFlow/blob/main/INSTALL.md"><code>INSTALL.md</code></a>. Rather than following them alone, ask Claude to take you through them:</p>
+<blockquote>
+<p>Read <a href="https://github.com/nida-institute/LLMFlow/blob/main/INSTALL.md">https://github.com/nida-institute/LLMFlow/blob/main/INSTALL.md</a> and walk me through installing Scripture Pipelines on this computer, one step at a time. Explain each step before we do it.</p>
+</blockquote>
+<p>This is the first chance to practise the way of working the whole workshop teaches: Claude explains and proposes, you decide and approve. Ask it why whenever a step is unclear — that is what it is there for.</p>
+<p>Along the way:</p>
+<ul>
+<li><strong><code>sp --version</code></strong> confirms the install worked.</li>
+<li><strong>Your API key is yours to type.</strong> <code>sp setup</code> asks for the key Scripture Pipelines uses to call a model — your OpenAI key. Run it <strong>in your own terminal</strong>, not through Claude, and never paste the key into the conversation — anything typed there becomes part of the session.</li>
+<li><strong><code>sp init</code></strong>, run in your project folder, sets the project up: its <code>CLAUDE.md</code>, its <code>docs/ai-context/</code> and its starter pipeline — and installs the skills this lesson uses.</li>
+</ul>
+<p>Then <strong>exit and restart Claude</strong> in the project folder (4.8 and 4.9 show how). Claude reads a project's <code>CLAUDE.md</code> when a session starts, so the session that ran <code>sp init</code> has not seen it.</p>
+<h3 id="lesson-1-42-helm-only-install-human-at-the-helm-into-your-project">4.2 <span class="tag helm">Helm only</span> Install Human at the Helm into your project</h3>
+<p>Human at the Helm installs from a copy of its own repository. Its installer is a skill that lives there, so starting Claude in that copy makes <code>/install</code> available (<a href="https://github.com/nida-institute/human-at-the-helm#getting-started">README</a>):</p>
+<div class="sourceCode" id="lesson-1-cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-1-cb3-1"><a href="#lesson-1-cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/nida-institute/human-at-the-helm</span>
+<span id="lesson-1-cb3-2"><a href="#lesson-1-cb3-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> human-at-the-helm</span>
+<span id="lesson-1-cb3-3"><a href="#lesson-1-cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">claude</span></span></code></pre></div>
+<p>Then, inside Claude:</p>
+<pre><code>/install ~/workshop-project</code></pre>
+<p><strong>Read what it proposes before you approve it.</strong> The installer lists every file it will write into your project and every file it will leave alone, then waits. That is the discipline the whole workshop teaches, applied to its own installation: Claude explains, you decide. Everything it installs — skills, the AI context, a <code>CLAUDE.md</code> — is plain text, declared in the repository's <code>manifest.yaml</code>.</p>
+<p>Then <strong>exit, and start Claude again in your project folder</strong> (4.8 and 4.9 show how). The skills and the <code>CLAUDE.md</code> belong to the project, so a session started there is the one that sees them.</p>
+<h3 id="lesson-1-43-both-load-context--have-claude-read-the-projects-rules-first">4.3 <span class="tag both">Both</span> <code>/load-context</code> — have Claude read the project's rules first</h3>
+<p>Type <code>/load-context</code> at the start of every session, before asking for anything else.</p>
+<p>Claude reads the project's <code>CLAUDE.md</code>, the documents under <code>docs/ai-context/</code>, the project's rules and the shared disciplines, then reports: which project and branch it is in, the commands it may use, what is changed and not yet saved, and that it is ready.</p>
+<p><em>Why it matters:</em> without it, Claude works from general habits rather than from this project's rules. Read its report — if it names the wrong project, or says it could not find the rules, stop there.</p>
+<h3 id="lesson-1-44-both-health-check--is-this-session-still-working-well">4.4 <span class="tag both">Both</span> <code>/health-check</code> — is this session still working well?</h3>
+<p>Ask at any point, and especially after a long stretch of work. Claude reports on five things:</p>
+<ol type="1">
+<li>whether the session has been compacted (condensed, losing detail);</li>
+<li>whether it is re-deriving things it already established;</li>
+<li>every correction you have had to make, listed one by one with what was claimed and what was true;</li>
+<li>how much work is unsaved, naming the files;</li>
+<li>whether the next step is waiting on a decision from you.</li>
+</ol>
+<p>It opens and closes with two answers — <strong>handoff: yes/no</strong> and <strong>exit: yes/no</strong> — and the decision is yours. "Handoff yes, exit no" is common: write things down, keep working.</p>
+<h3 id="lesson-1-45-both-handoff--write-down-what-the-next-session-needs">4.5 <span class="tag both">Both</span> <code>/handoff</code> — write down what the next session needs</h3>
+<p>Claude writes <code>project/HANDOFF.md</code>, leading with <strong>the single next action</strong>, then the work in progress, the decisions made and why, and what not to touch. The test it is held to: a fresh session reading only that file and the project must be able to start the next step without guessing.</p>
+<p><strong>Read it.</strong> It is the only thing the next session will know about this one.</p>
+<h3 id="lesson-1-46-both-commit-ready--is-the-work-ready-to-be-saved">4.6 <span class="tag both">Both</span> <code>/commit-ready</code> — is the work ready to be saved?</h3>
+<p>Before anything is saved, <code>/commit-ready</code> checks it against the project's definition of done, in order, stopping at the first thing that fails: an issue exists for the work; tests were written first and pass; the CHANGELOG is updated; the commit message names its issue; and, once you have opened a pull request, GitHub's automatic checks on it pass.</p>
+<p>It decides <strong>whether</strong> a commit may happen. <code>/stage-commits</code> is <strong>how</strong>. Where its checklist says the AI commits, pushes, opens a pull request or merges, those steps are yours: <strong>only you commit, push and open pull requests.</strong></p>
+<p><strong><span class="tag sp">sp only</span></strong> Its gates were written for the Scripture Pipelines engine itself — a Python test suite, a version in <code>pyproject.toml</code>, a TypeScript interface. Where a gate cannot apply to your project, expect Claude to say so rather than pass it silently.</p>
+<h3 id="lesson-1-47-both-stage-commits--claude-prepares-the-save-you-make-it">4.7 <span class="tag both">Both</span> <code>/stage-commits</code> — Claude prepares the save; you make it</h3>
+<p>In a git repository, Claude groups the changed files, asks you to confirm whose each change is, writes the commit message to a file, stages the files, shows you exactly what is staged, and hands you the one command that saves it. <strong>Claude never commits or pushes</strong> — those carry your name, so they are yours to do.</p>
+<p>You will use this from Lesson 2 onwards, once you have your own repository.</p>
+<h3 id="lesson-1-48-both-exit--end-the-session">4.8 <span class="tag both">Both</span> <code>/exit</code> — end the session</h3>
+<ul>
+<li><strong>Terminal:</strong> type <code>/exit</code> (or press Ctrl+D twice).</li>
+<li><strong>Desktop app:</strong> press Cmd+W (Ctrl+W on Windows), or close the session in the sidebar.</li>
+</ul>
+<p>(<a href="https://code.claude.com/docs/en/quickstart">quickstart</a>, <a href="https://code.claude.com/docs/en/desktop">desktop</a>)</p>
+<h3 id="lesson-1-49-both-restart">4.9 <span class="tag both">Both</span> Restart</h3>
+<ul>
+<li><strong>Terminal:</strong> <code>claude</code> in the project folder starts fresh. <code>claude --continue</code> reopens the most recent conversation in that folder; <code>claude --resume</code> lets you pick an older one.</li>
+<li><strong>Desktop app:</strong> Cmd+N (Ctrl+N) starts a fresh session in the same folder; clicking a previous session in the sidebar resumes it.</li>
+</ul>
+<p>(<a href="https://code.claude.com/docs/en/sessions">sessions</a>)</p>
+<p><strong>Prefer a fresh start after a handoff.</strong> Then type <code>/load-context</code> again.</p>
+<p><code>/load-context</code> reads <code>project/HANDOFF.md</code>, so the fresh session starts from the handoff the last one wrote.</p>
+<h3 id="lesson-1-410-both-the-other-modes-of-the-app-chat-and-cowork">4.10 <span class="tag both">Both</span> The other modes of the app: Chat and Cowork</h3>
+<p><strong>Chat</strong> reads none of your project's files or settings. It is a separate assistant.</p>
+<p><strong>Cowork</strong> gives Claude access to folders you grant it, but it is not Claude Code, and it does not follow most of what this workshop sets up.</p>
+<p><strong>What Cowork reads</strong></p>
+<ul>
+<li>It reads <code>CLAUDE.md</code> files inside a folder you grant it, so a project's <code>CLAUDE.md</code> reaches it, along with its instruction to read <code>docs/ai-context/</code>.</li>
+<li>It does <strong>not</strong> read anything in <code>~/.claude</code>, the folder where Claude Code keeps your personal configuration. The Cowork overview says so plainly (<a href="https://claude.com/docs/cowork/overview">Cowork overview</a>). That leaves out:
+<ul>
+<li>your personal <code>~/.claude/CLAUDE.md</code>, with any rules you keep for every project;</li>
+<li><code>settings.json</code>, both yours and the project's, so no allow / deny / ask permission rules apply;</li>
+<li>hooks — checks that run automatically, such as at the start of a session;</li>
+<li>the <code>env</code> block in your settings, such as a separate git author name for the AI;</li>
+<li>Claude Code's memory files and the skills in <code>~/.claude/skills</code> — so none of this lesson's five commands exists in Cowork.</li>
+</ul></li>
+<li>Its settings and skills come from your claude.ai account, added through the app's Customize screen.</li>
+</ul>
+<p><strong>Where Cowork can read, write and run</strong></p>
+<ul>
+<li>It can only reach the folders you grant it.</li>
+<li>Reading and writing files happens directly on your computer. Shell commands run in an isolated Linux virtual machine on your computer.</li>
+<li>So <code>git</code> and <code>gh</code> there should not have your saved credentials, and a push would most likely fail. <em>This comes from a third-party blog post, not Anthropic's own documentation.</em></li>
+<li>Commit authorship is a risk: without your settings, a commit made there would not carry the author name you set for the AI. What name it would use instead has not been confirmed.</li>
+</ul>
+<p><strong>What this means for you:</strong> in Cowork, the rules in a project's <code>CLAUDE.md</code> are only text the model is asked to follow. Nothing enforces them, and your personal rules do not reach it at all. Use the <strong>Code</strong> tab for this workshop.</p>
+<h2 id="lesson-1-5-how-you-know-it-worked">5. How you know it worked</h2>
+<ul>
+<li><code>claude</code> starts in your project folder, or the app's Code tab shows that folder.</li>
+<li><strong><span class="tag sp">sp only</span></strong> <code>sp --version</code> prints a version number.</li>
+<li>The project folder holds a <code>CLAUDE.md</code>, a <code>docs/ai-context/</code> folder and a <code>.claude/skills/</code> folder, written by <code>sp init</code> or by <code>/install</code>.</li>
+<li><code>/load-context</code> names <strong>your</strong> project folder and lists its rules. If it names a different folder, you started Claude in the wrong place.</li>
+<li>Typing <code>/</code> shows <code>load-context</code>, <code>health-check</code>, <code>handoff</code>, <code>commit-ready</code> and <code>stage-commits</code> in the menu. If any is missing, the install in 4.2 did not reach this folder.</li>
+<li><code>project/HANDOFF.md</code> exists, carries today's date, and its first item is a next action you could start yourself.</li>
+<li>After restarting, the fresh session can state that next action correctly without you telling it.</li>
+</ul>
+<h2 id="lesson-1-6-non-goals">6. Non-goals</h2>
+<ul>
+<li>Git, repositories and commits — Lesson 2. <code>/commit-ready</code> and <code>/stage-commits</code> are introduced here and practised there.</li>
+<li>Running pipelines (<code>sp run</code>), which costs money and is only ever done on your instruction.</li>
+<li>Chat and Cowork beyond knowing why this workshop does not use them.</li>
+<li>Customising settings, permissions or hooks.</li>
+</ul>
+<h2 id="lesson-1-7-teaching-this-lesson">7. Teaching this lesson</h2>
+<h3 id="lesson-1-before-the-day">Before the day</h3>
+<ul>
+<li>Tell participants, at least a week ahead, that they need <strong>a paid Claude plan</strong> (Pro, Max, Team or Enterprise, or Claude Console credits) — and, <strong><span class="tag sp">sp only</span></strong>, <strong>an OpenAI API key</strong> — the workshop has been tested with OpenAI's models. Neither can be arranged quickly in the room.</li>
+<li>Ask them to bring a laptop they can install software on. A managed work machine may block the installers, or <strong><span class="tag sp">sp only</span></strong> the unsigned <code>sp</code> binary.</li>
+<li>Work through this lesson yourself on a clean account shortly before, so you meet any change in the installers before the room does.</li>
+<li>Plan the pairs so that, where you can, each pair has one person comfortable in a terminal.</li>
+</ul>
+<h3 id="lesson-1-introducing-each-step">Introducing each step</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Say</th>
+<th>Rough time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>4.0</td>
+<td>"You'll work in pairs, and Claude is your guide. Reading what it proposes before you approve it is the skill we're learning today."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.1</td>
+<td>"Claude Code is Claude working on the files on your own computer. It runs in a terminal or in the desktop app's Code tab — they're the same thing, so pick whichever you prefer."</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>4.2 <span class="tag sp">sp only</span></td>
+<td>"Now let Claude walk you through installing Scripture Pipelines. Notice the pattern: it explains, you decide. One rule: your API key never goes into the conversation."</td>
+<td>25 min</td>
+</tr>
+<tr class="even">
+<td>4.2 <span class="tag helm">Helm only</span></td>
+<td>"The installer tells you every file it will write before it writes any. Read the list before you approve it — that's the whole method in one step."</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>4.3</td>
+<td>"Claude starts every session knowing nothing about your project. <code>/load-context</code> makes it read the project's rules first. Read its report — it's telling you what it understood."</td>
+<td>10 min</td>
+</tr>
+<tr class="even">
+<td>4.4</td>
+<td>"Sessions get tired. <code>/health-check</code> tells you whether this one still knows what it knows, with the evidence."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.5</td>
+<td>"Everything Claude knows vanishes when the session ends, unless it's written down. <code>/handoff</code> writes it down — and you read it."</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>4.6–4.7</td>
+<td>"Two commands you'll use in Lesson 2: one checks whether work is ready to save, the other prepares the save. Saving itself is always yours."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.8–4.9</td>
+<td>"Ending and restarting is normal and cheap. A fresh session with a good handoff often works better than a long one."</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>4.10</td>
+<td>"The app has two other modes. This is why we don't use them for this work."</td>
+<td>10 min</td>
+</tr>
+</tbody>
+</table>
+<p>The times are estimates, about two hours in all; correct them from experience.</p>
+<h3 id="lesson-1-where-people-get-stuck">Where people get stuck</h3>
+<ul>
+<li><strong>Claude started in the wrong folder.</strong> <code>/load-context</code> reports a different project, or finds no rules. Exit, <code>cd</code> into the project folder, start again.</li>
+<li><strong><span class="tag helm">Helm only</span> <code>/install</code> is not in the <code>/</code> menu.</strong> Claude was started somewhere other than the copy of the Human at the Helm repository. Start it there.</li>
+<li><strong><span class="tag sp">sp only</span> <code>sp: command not found</code>.</strong> The folder it was installed into is not on the PATH, or the terminal was opened before the install. Open a new terminal; if that fails, <code>INSTALL.md</code>'s troubleshooting table covers it.</li>
+<li><strong><span class="tag sp">sp only</span> macOS refuses to open <code>sp</code></strong> ("unidentified developer"). <em>System Settings → Privacy &amp; Security → Allow Anyway</em>, then run it again — described in <code>INSTALL.md</code>.</li>
+<li><strong><span class="tag sp">sp only</span> On Windows, <code>sp</code> gives an odd parameter error.</strong> PowerShell's own <code>sp</code> alias ran instead. Use <code>sp.exe</code>, or Command Prompt — <code>INSTALL.md</code> explains.</li>
+<li><strong>A slash command is missing from the <code>/</code> menu.</strong> Both installers put the skills in the project's own <code>.claude/skills/</code> folder, so check that the install targeted <em>this</em> folder. <strong><span class="tag sp">sp only</span></strong> <code>sp doctor</code> restores any that are missing. Then restart Claude.</li>
+<li><strong><span class="tag sp">sp only</span> Someone pastes their API key into Claude.</strong> Have them create a new key with the provider and revoke the old one; then run <code>sp setup</code> in their own terminal.</li>
+<li><strong>Someone is on the Free Claude plan.</strong> Claude Code is not included. Pair them with someone who has a plan for the rest of the lesson.</li>
+</ul>
+<h3 id="lesson-1-before-moving-the-room-on">Before moving the room on</h3>
+<p>Run the §5 checks out loud. In particular, after 4.9 ask one pair to show that their fresh session can state the next action from their handoff — it is the point of the whole lesson.</p>
+</section>
+<section class="lesson" id="lesson-2">
+<h1 id="lesson-2-lesson-2--your-project-on-github-with-an-ai-agent-that-works-under-its-own-name">Lesson 2 — Your project on GitHub, with an AI agent that works under its own name</h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> none yet. <strong>Track:</strong> Both. Where a file's location differs between the tracks, both are given.</p>
+<p><strong>Audience.</strong></p>
+<ul>
+<li><em>Scholars:</em> you will put your project on GitHub, see exactly which actions are the AI's and which are yours, and keep track of the work in issues, a board and a task list Claude reads.</li>
+<li><em>Technical participants:</em> the same, plus how the agent's identity is configured, why a push is always yours, and how to check what the skills and AI-context files actually instruct.</li>
+</ul>
+<p><strong>Vocabulary.</strong></p>
+<ul>
+<li><strong>git</strong> — the tool that records a project's history on your computer.</li>
+<li><strong>GitHub</strong> — a website that holds a copy of that history and adds issues, boards and sharing.</li>
+<li><strong>Repository (repo)</strong> — a project folder whose history git tracks.</li>
+<li><strong>Commit</strong> — a saved, named point in that history. It carries an author's name.</li>
+<li><strong>Push</strong> — sending your commits to GitHub. It is done with <em>your</em> login, so GitHub records <em>you</em> as the person who pushed, whoever wrote the change.</li>
+<li><strong>Issue</strong> — a numbered GitHub page for one piece of work or one question, with a discussion thread. Written <code>#12</code>.</li>
+<li><strong>Project board</strong> — a GitHub page showing issues as cards in columns.</li>
+<li><strong>Agent account</strong> — a second GitHub account that belongs to you but is used only by the AI, so anything it writes on GitHub, such as a comment, is labelled as the AI's.</li>
+<li><strong>Claude GitHub App</strong> — lets anyone write <code>@claude</code> in an issue or pull request and have Claude respond on GitHub itself.</li>
+<li><strong><code>gh</code></strong> — GitHub's command-line tool.</li>
+<li><strong><code>TODO.md</code></strong> — <code>project/TODO.md</code>, the project's task list, which Claude reads at the start of a session.</li>
+<li><strong>CHANGELOG</strong> — <code>CHANGELOG.md</code>, the dated record of what changed and why.</li>
+</ul>
+<hr />
+<h2 id="lesson-2-0-why-this-lesson">0. Why this lesson</h2>
+<p>Once an AI can create issues, write commit messages and prepare your work for saving, you need to be able to tell afterwards <strong>who did what</strong>. Without that, an issue the AI opened reads as one you wrote, and a change it made reads as your decision. This lesson sets up the identities that keep those apart, and the files that keep the work's state outside any one session.</p>
+<h2 id="lesson-2-1-the-core-idea">1. The core idea</h2>
+<p><strong>The AI's actions carry the AI's name; the acts that carry your name are yours.</strong> The agent account labels what the AI writes on GitHub. <strong>Only you create issues, commit, push and open pull requests</strong> — Claude drafts and prepares them and hands you the command. Everything else in this lesson — issues, the board, <code>TODO.md</code>, the CHANGELOG — is where the work is recorded so that the next session, and the next person, can find it.</p>
+<h2 id="lesson-2-2-what-you-start-with">2. What you start with</h2>
+<ul>
+<li>Lesson 1 done: Claude Code working in your <code>sp init</code> project, and the session commands.</li>
+<li>A GitHub account of your own.</li>
+<li><code>gh</code> installed and signed in <strong>as you</strong>, in your own terminal: <code>gh auth login</code>. If you do not have <code>gh</code>, ask Claude to walk you through installing it from <a href="https://cli.github.com">cli.github.com</a>.</li>
+<li>Admin rights on the repository you create (you have them, since you create it).</li>
+</ul>
+<p>The way of working is the same as Lesson 1 (§4.0): in pairs at a workshop, with Claude as your guide — or on your own, with Claude as your partner and the §5 checks as your instructor.</p>
+<h2 id="lesson-2-3-what-you-produce">3. What you produce</h2>
+<ul>
+<li>Your project as a private GitHub repository, created and pushed by you.</li>
+<li>A second GitHub account for the AI, added to that repository, and Claude Code configured to use it — while your own terminal still uses yours.</li>
+<li>The Claude GitHub App installed on the repository.</li>
+<li>A project board with four columns, an issue on it, and that issue linked from <code>TODO.md</code>.</li>
+<li>A first CHANGELOG entry.</li>
+<li>Notes from reading the skills and AI-context files, including where they disagree.</li>
+</ul>
+<h2 id="lesson-2-4-steps">4. Steps</h2>
+<h3 id="lesson-2-41-both-make-the-project-a-repository-with-claudes-guidance">4.1 <span class="tag both">Both</span> Make the project a repository, with Claude's guidance</h3>
+<p>Ask Claude to make the folder a git repository and prepare a first commit. It runs <code>git init</code>, checks what should and should not be tracked (<strong><span class="tag sp">sp only</span></strong> generated intermediate files should not be — see <code>separate-output-from-intermediates</code> in <code>docs/ai-context/sp/rules.md</code>), runs <code>/commit-ready</code> to check the work against the definition of done, then runs <code>/stage-commits</code>: it groups the files, asks you to confirm them, stages them, shows you the staged diff and hands you the commit command.</p>
+<p><strong>You run the commit.</strong> Read the diff it showed you first.</p>
+<h3 id="lesson-2-42-both-put-it-on-github--in-your-own-terminal">4.2 <span class="tag both">Both</span> Put it on GitHub — in your own terminal</h3>
+<p>Create the GitHub repository <strong>from your own terminal, not from inside Claude</strong>. Inside Claude, <code>gh</code> will shortly be signed in as the agent (4.4), and the repository would then belong to the agent account instead of to you.</p>
+<div class="sourceCode" id="lesson-2-cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-2-cb1-1"><a href="#lesson-2-cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> ~/workshop-project</span>
+<span id="lesson-2-cb1-2"><a href="#lesson-2-cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> repo create workshop-project <span class="at">--source</span> . <span class="at">--private</span> <span class="at">--push</span></span></code></pre></div>
+<p><code>--source .</code> uses this folder, <code>--private</code> keeps it private, and <code>--push</code> sends your commits. (<a href="https://cli.github.com/manual/gh_repo_create">gh repo create</a>)</p>
+<h3 id="lesson-2-43-both-install-the-claude-github-app">4.3 <span class="tag both">Both</span> Install the Claude GitHub App</h3>
+<p>Claude Code has a command, <code>/install-github-app</code>, that does this for you — but it pushes a branch to GitHub, and only you push. So install it by hand, which takes three steps: (<a href="https://code.claude.com/docs/en/github-actions">GitHub Actions — manual setup</a>)</p>
+<ol type="1">
+<li><strong>Install the app</strong> on your repository from <a href="https://github.com/apps/claude">github.com/apps/claude</a>, signed in as you.</li>
+<li><strong>Add a credential as a repository secret</strong> (the repository's Settings → Secrets and variables → Actions): either an API key from the Claude Console, stored as <code>ANTHROPIC_API_KEY</code>, or a token from your Claude subscription, made in your own terminal with <code>claude setup-token</code> and stored as <code>CLAUDE_CODE_OAUTH_TOKEN</code>.</li>
+<li><strong>Add the workflow file.</strong> Ask Claude to write <code>.github/workflows/claude.yml</code> from the example in the documentation; then <code>/commit-ready</code>, <code>/stage-commits</code>, and you commit and push it.</li>
+</ol>
+<p>After that, writing <code>@claude</code> in an issue or pull request comment starts Claude on GitHub. Its comments appear as <code>claude[bot]</code>.</p>
+<p><strong>It costs something each time it runs:</strong> GitHub Actions minutes from your account's allowance, plus Claude usage against the API key or subscription you gave it.</p>
+<p>Commits, pushes and pull requests in your repository remain yours, however the work was prepared. GitHub's automatic checks run on the pull request you open.</p>
+<h3 id="lesson-2-44-both-give-the-ai-its-own-github-account">4.4 <span class="tag both">Both</span> Give the AI its own GitHub account</h3>
+<ol type="1">
+<li><p><strong>Create a second GitHub account</strong> for the agent, e.g. <code>yourname-ai-agent</code>. GitHub allows one free machine account per person, used only for automation. (<a href="https://docs.github.com/en/site-policy/github-terms/github-terms-of-service">Terms of Service</a>)</p></li>
+<li><p><strong>Add it to your repository</strong> as a collaborator with the <strong>Triage</strong> role — enough to open issues, comment and label, not enough to change code. (<a href="https://docs.github.com/en/organizations/managing-user-access-to-your-organizations-repositories/managing-repository-roles/repository-roles-for-an-organization">roles</a>) Accept the invitation while signed in as the agent.</p></li>
+<li><p><strong>Tell Claude Code to use it.</strong> In <code>~/.claude/settings.json</code>, the <code>env</code> block sets variables for the commands Claude runs — and only those, so your own terminal is unaffected:</p>
+<div class="sourceCode" id="lesson-2-cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="lesson-2-cb2-1"><a href="#lesson-2-cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="lesson-2-cb2-2"><a href="#lesson-2-cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;env&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="lesson-2-cb2-3"><a href="#lesson-2-cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;GH_CONFIG_DIR&quot;</span><span class="fu">:</span> <span class="st">&quot;/Users/you/.config/gh-agent&quot;</span><span class="fu">,</span></span>
+<span id="lesson-2-cb2-4"><a href="#lesson-2-cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;GIT_AUTHOR_NAME&quot;</span><span class="fu">:</span> <span class="st">&quot;Claude (AI agent)&quot;</span><span class="fu">,</span></span>
+<span id="lesson-2-cb2-5"><a href="#lesson-2-cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;GIT_AUTHOR_EMAIL&quot;</span><span class="fu">:</span> <span class="st">&quot;you+agent@example.com&quot;</span><span class="fu">,</span></span>
+<span id="lesson-2-cb2-6"><a href="#lesson-2-cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;GIT_COMMITTER_NAME&quot;</span><span class="fu">:</span> <span class="st">&quot;Claude (AI agent)&quot;</span><span class="fu">,</span></span>
+<span id="lesson-2-cb2-7"><a href="#lesson-2-cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;GIT_COMMITTER_EMAIL&quot;</span><span class="fu">:</span> <span class="st">&quot;you+agent@example.com&quot;</span></span>
+<span id="lesson-2-cb2-8"><a href="#lesson-2-cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="lesson-2-cb2-9"><a href="#lesson-2-cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<p><code>GH_CONFIG_DIR</code> makes <code>gh</code> keep a separate login in that folder (<a href="https://cli.github.com/manual/gh_help_environment">gh environment</a>). The <code>GIT_*</code> variables set the author name on any commit made from inside Claude (<a href="https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables">git environment variables</a>). Use an absolute path.</p></li>
+<li><p><strong>Sign <code>gh</code> in as the agent, into that folder</strong> — in your own terminal:</p>
+<div class="sourceCode" id="lesson-2-cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-2-cb3-1"><a href="#lesson-2-cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">GH_CONFIG_DIR</span><span class="op">=</span>/Users/you/.config/gh-agent <span class="ex">gh</span> auth login</span></code></pre></div>
+<p>Sign in with the agent account, not yours.</p></li>
+<li><p><strong>Do not run <code>gh auth setup-git</code>.</strong> It would make git use a <code>gh</code> login for pushing. Pushing stays with your own credentials, in your own terminal. (<a href="https://cli.github.com/manual/gh_auth_setup-git">gh auth setup-git</a>)</p></li>
+</ol>
+<p><strong>Check it:</strong> restart Claude, then ask it to run <code>gh auth status</code>. It should name the agent account. In your own terminal, <code>gh auth status</code> should still name you.</p>
+<h3 id="lesson-2-45-both-issues--drafted-by-claude-created-by-you">4.5 <span class="tag both">Both</span> Issues — drafted by Claude, created by you</h3>
+<p><strong>Only you create issues.</strong> Ask Claude to draft one for the next piece of work. It writes the title and body to a file in <code>tmp/</code> and shows them to you. Edit until it says what you mean, then create it yourself, in your own terminal:</p>
+<div class="sourceCode" id="lesson-2-cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-2-cb4-1"><a href="#lesson-2-cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> issue create <span class="at">--title</span> <span class="st">&quot;&lt;title&gt;&quot;</span> <span class="at">--body-file</span> tmp/issue.md</span></code></pre></div>
+<p>The issue appears under your name, because it is yours.</p>
+<p>Issues are also where design discussion belongs: the thread keeps the whole history of a decision, where a separate document would drift (<strong><span class="tag sp">sp only</span></strong> <code>docs/ai-context/sp/github-workflow.md</code>).</p>
+<h3 id="lesson-2-46-both-a-project-board-with-four-columns">4.6 <span class="tag both">Both</span> A project board with four columns</h3>
+<p>Every board uses the same four columns, in order: <strong>Backlog → Todo → Doing → Done</strong> (<strong><span class="tag sp">sp only</span></strong> <code>project-boards</code> in <code>docs/ai-context/sp/rules.md</code>; a Helm project adopts the same four).</p>
+<p>In your own terminal, give your login the scope it needs, create the board and link it:</p>
+<div class="sourceCode" id="lesson-2-cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-2-cb5-1"><a href="#lesson-2-cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> auth refresh <span class="at">-s</span> project</span>
+<span id="lesson-2-cb5-2"><a href="#lesson-2-cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> project create <span class="at">--owner</span> @me <span class="at">--title</span> <span class="st">&quot;your-project&quot;</span></span>
+<span id="lesson-2-cb5-3"><a href="#lesson-2-cb5-3" aria-hidden="true" tabindex="-1"></a><span class="ex">gh</span> project link <span class="op">&lt;</span>number<span class="op">&gt;</span> --owner @me <span class="at">--repo</span> <span class="op">&lt;</span>you<span class="op">&gt;</span>/your-project</span></code></pre></div>
+<p>Then open the board on GitHub and set the Status column options to the four above — the columns are edited in the web page. Add your issue to the board. (<a href="https://cli.github.com/manual/gh_project">gh project</a>)</p>
+<h3 id="lesson-2-47-both-todomd--the-task-list-claude-reads-first">4.7 <span class="tag both">Both</span> <code>TODO.md</code> — the task list Claude reads first</h3>
+<p><code>project/TODO.md</code> has three sections: <strong>Active</strong> (in flight), <strong>Backlog</strong> (next) and <strong>Done</strong> (recent). Link an issue as <code>→ #N</code> rather than copying its text — the issue is the full record, the list is the short version (<strong><span class="tag sp">sp only</span></strong> <code>todo-is-the-session-cache</code> in <code>docs/ai-context/sp/rules.md</code>).</p>
+<p>Add your issue to it. Notice the difference from Lesson 1's handoff: <code>HANDOFF.md</code> holds only what disappears once work is committed; <code>TODO.md</code> holds everything that outlasts the session.</p>
+<h3 id="lesson-2-48-both-changelog--the-dated-record-of-what-changed">4.8 <span class="tag both">Both</span> CHANGELOG — the dated record of what changed</h3>
+<p>Add <code>CHANGELOG.md</code> with a first entry: a dated heading, then one line per change, each naming the issue it closes as <code>(Issue #N)</code>. <code>/stage-commits</code> checks that a change in behaviour has a CHANGELOG entry before it stages anything.</p>
+<p><strong>Head each entry with the date only</strong> — <code>## 2026-10-07</code>. <strong><span class="tag sp">sp only</span></strong> <code>docs/ai-context/sp/github-workflow.md</code> numbers versions in four parts (<code>0.2.1.14</code>), taken from a <code>pyproject.toml</code> that a workshop project does not have; a date is all a workshop project needs.</p>
+<h3 id="lesson-2-49-both-read-what-the-skills-and-ai-context-actually-say">4.9 <span class="tag both">Both</span> Read what the skills and AI context actually say</h3>
+<p>A skill is only a text file, and so are the project's rules. Reading them is how you find out what Claude has been told to do — and whether the instructions agree with each other.</p>
+<p>Open these:</p>
+<p><strong><span class="tag both">Both</span></strong></p>
+<ul>
+<li><code>.claude/skills/stage-commits/SKILL.md</code></li>
+<li><code>.claude/skills/commit-ready/SKILL.md</code></li>
+</ul>
+<p><strong><span class="tag sp">sp only</span></strong></p>
+<ul>
+<li><code>docs/ai-context/sp/rules.md</code> — the rules every session is held to</li>
+<li><code>docs/ai-context/sp/github-workflow.md</code></li>
+<li><code>~/.sp/disciplines/github-authority.md</code></li>
+</ul>
+<p><strong><span class="tag helm">Helm only</span></strong></p>
+<ul>
+<li><code>docs/ai-context/project/rules.md</code> — your project's own rules</li>
+<li><code>docs/ai-context/helm/disciplines/github-authority.md</code></li>
+</ul>
+<p>Then answer three questions, first by reading and then by asking Claude to check your answer against the files:</p>
+<ol type="1">
+<li><strong>Who creates a GitHub issue, and does a person see it first?</strong></li>
+<li><strong>Who commits, and who pushes?</strong></li>
+<li><strong>Who opens a pull request?</strong></li>
+</ol>
+<p>Write down which file says what, quoting the line. Where the files disagree, note it.</p>
+<p>The answers in this workshop: <strong>only you create issues, commit, push and open pull requests.</strong> Ruled 2026-10-07. Where a shipped file says otherwise, that is a disagreement worth reporting to the project that ships it — not working around. Disagreements found on 2026-10-07 were reported, and some may be fixed by the time you read this; if every file now agrees, say so.</p>
+<h2 id="lesson-2-5-how-you-know-it-worked">5. How you know it worked</h2>
+<ul>
+<li>On GitHub, the repository is owned by <strong>your</strong> account, and its first commit is authored by you.</li>
+<li>Inside Claude, <code>gh auth status</code> names the agent account; in your own terminal it names you.</li>
+<li>The issue from 4.5 shows <strong>you</strong> as its author.</li>
+<li>The board has exactly the four columns, with the issue on it.</li>
+<li><code>project/TODO.md</code> links the issue as <code>→ #N</code>.</li>
+<li>You can say, with a quoted line from each file in 4.9, what it says about issues, commits, pushes and pull requests — and where any of them disagree with the workshop's answer.</li>
+</ul>
+<h2 id="lesson-2-6-non-goals">6. Non-goals</h2>
+<ul>
+<li>Branches and pull requests, beyond knowing that opening one is yours.</li>
+<li>Writing or changing skills.</li>
+<li>Organisation accounts and permissions.</li>
+</ul>
+<h2 id="lesson-2-7-teaching-this-lesson">7. Teaching this lesson</h2>
+<h3 id="lesson-2-before-the-day">Before the day</h3>
+<ul>
+<li>Tell participants ahead of time to <strong>create the second GitHub account for the AI</strong> before they arrive (4.4, step 1). It needs a separate email address, and a confirmation email can be slow; a <code>you+agent@…</code> address works with many providers.</li>
+<li>Ask them to <strong>install <code>gh</code></strong> and sign in as themselves beforehand, if they can.</li>
+<li>Decide which credential participants will give the GitHub App (4.3): an API key from the Claude Console, or a token from their Claude subscription. Tell them which, and that each <code>@claude</code> run costs Actions minutes and Claude usage.</li>
+<li>Work through the lesson yourself shortly before, including the board's columns in the web page — GitHub's screens change.</li>
+</ul>
+<h3 id="lesson-2-introducing-each-step">Introducing each step</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Say</th>
+<th>Rough time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>—</td>
+<td>"The theme today: you should always be able to tell afterwards who did what. The AI's actions carry the AI's name; anything that carries your name, you do yourself."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.1</td>
+<td>"Claude prepares the first save and shows you exactly what's in it. You read it, then you run the commit."</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>4.2</td>
+<td>"Create the GitHub repository from your own terminal. Inside Claude, <code>gh</code> is about to become the agent, and the repository must belong to you."</td>
+<td>10 min</td>
+</tr>
+<tr class="even">
+<td>4.3</td>
+<td>"The GitHub App lets people ask Claude for help on GitHub itself. We install it by hand, because the automatic installer pushes — and pushing is yours."</td>
+<td>20 min</td>
+</tr>
+<tr class="odd">
+<td>4.4</td>
+<td>"Now the AI gets its own GitHub account, so what it writes there is labelled as the AI's. Your own terminal stays you."</td>
+<td>25 min</td>
+</tr>
+<tr class="even">
+<td>4.5</td>
+<td>"Claude drafts issues; you create them. An issue is a decision about what to work on, and that's yours."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.6</td>
+<td>"A board shows the issues as cards. Every board here has the same four columns."</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>4.7–4.8</td>
+<td>"<code>TODO.md</code> is the short list Claude reads at the start of every session. The CHANGELOG is the dated record of what changed."</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>4.9</td>
+<td>"Skills are just text files. Let's read what Claude has actually been told — and find where the files disagree."</td>
+<td>25 min</td>
+</tr>
+</tbody>
+</table>
+<p>The times are estimates, about two and a half hours in all; correct them from experience.</p>
+<h3 id="lesson-2-where-people-get-stuck">Where people get stuck</h3>
+<ul>
+<li><strong>The repository was created under the agent account.</strong> It was created from inside Claude after 4.4. Delete it on GitHub and create it again from the participant's own terminal.</li>
+<li><strong><code>gh auth status</code> inside Claude still names the participant.</strong> Claude was not restarted after <code>settings.json</code> changed, or <code>GH_CONFIG_DIR</code> is a relative path. Use an absolute path and restart.</li>
+<li><strong><code>gh auth status</code> in their own terminal names the agent.</strong> They signed in without <code>GH_CONFIG_DIR=…</code> in front of <code>gh auth login</code>, so the agent replaced their own login. Sign in again as themselves, then redo 4.4 step 4.</li>
+<li><strong>A participant's own commit is authored as the AI, or their issue appears under the agent.</strong> In the terminal version they ran it with Claude's <code>!</code> prefix, which uses Claude's settings. Run it again from a separate terminal window — or, in the app, from the Terminal pane (Lesson 1, 4.1).</li>
+<li><strong>The agent cannot comment on the repository.</strong> The collaborator invitation has not been accepted. Sign in to GitHub as the agent and accept it.</li>
+<li><strong><code>gh project create</code> is refused.</strong> The login lacks the <code>project</code> scope: <code>gh auth refresh -s project</code>.</li>
+<li><strong><code>@claude</code> does nothing.</strong> The workflow file is not on GitHub yet, or the secret's name does not match the one the workflow expects. Check the repository's Actions tab for a failed run.</li>
+<li><strong><code>settings.json</code> will not load after editing.</strong> A missing comma or brace. Ask Claude to check the file — it is a quick fix and a good example of letting Claude read before it writes.</li>
+</ul>
+<h3 id="lesson-2-before-moving-the-room-on">Before moving the room on</h3>
+<p>Run the §5 checks out loud. After 4.4, have every pair run <code>gh auth status</code> in both places and say which account each one names; the rest of the lesson depends on it. In 4.9, ask pairs to read out one disagreement they found, quoting the line.</p>
+</section>
+<section class="lesson" id="lesson-3">
+<h1 id="lesson-3-lesson-3--the-sample-pipeline-reading-it-checking-it-and-knowing-what-it-costs">Lesson 3 — The sample pipeline: reading it, checking it, and knowing what it costs</h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> none yet. <strong>Track:</strong> sp only. Human at the Helm participants skip this lesson.</p>
+<p><strong>Audience.</strong></p>
+<ul>
+<li><em>Scholars:</em> you will read a pipeline as a description of what happens to a passage — which texts are fetched, which analyses come with them, what a model is asked, and from what — and you will decide when it runs.</li>
+<li><em>Technical participants:</em> the same, plus the step types, how outputs are named and passed on, and how to check a pipeline completely without spending anything.</li>
+</ul>
+<p><strong>Vocabulary.</strong></p>
+<ul>
+<li><strong>Pipeline</strong> — a YAML file listing steps in order; each step takes named inputs and produces named outputs. YAML is a plain-text format for structured settings.</li>
+<li><strong>Step</strong> — one operation in a pipeline: fetch a text, save a file, ask a model.</li>
+<li><strong>Step type</strong> — what kind of operation a step is, given by its <code>type:</code> line.</li>
+<li><strong>Resource</strong> — a text Scripture Pipelines can open by name, such as <code>SBLGNT</code> (the Society of Biblical Literature Greek New Testament), <code>WLC</code> (the Westminster Leningrad Codex of the Hebrew Bible) or <code>BSB</code> (the Berean Standard Bible).</li>
+<li><strong>Model</strong> — the large language model a step sends its prompt to, e.g. <code>gpt-4.1</code>. Calling one costs money.</li>
+<li><strong>Prompt</strong> — the instructions a model step sends, kept in a <code>.gpt</code> file under <code>prompts/</code>.</li>
+<li><strong>Token</strong> — the unit a model provider charges by: roughly three-quarters of an English word.</li>
+<li><strong>Lint</strong> — checking a pipeline for mistakes without running it.</li>
+<li><strong>Dry run</strong> — running a pipeline in a mode that resolves every name and path but calls no model.</li>
+<li><strong>Deliverable / intermediate</strong> — the files a pipeline exists to produce, and the files it writes on the way there.</li>
+</ul>
+<hr />
+<h2 id="lesson-3-0-why-this-lesson">0. Why this lesson</h2>
+<p>A pipeline spends your money and writes files in your name, and Claude will happily offer to run one. Before anyone runs it, you need to be able to say what it will do, which parts cost money, and whether it is ready. Every one of those can be found out for free.</p>
+<h2 id="lesson-3-1-the-core-idea">1. The core idea</h2>
+<p><strong>Only the model steps cost money, and you decide when they run.</strong> Everything else in a pipeline — fetching texts, attaching analyses, saving files — is free, and so are the checks (<code>sp lint</code>, <code>--dry-run</code>). In the sample, two steps call a model and every other step is free. That ratio is the point: the engine does the work of putting the right text in front of the model, so the model is asked about what it was given rather than what it remembers.</p>
+<h2 id="lesson-3-2-what-you-start-with">2. What you start with</h2>
+<ul>
+<li>Lessons 1 and 2 done: a project set up with <code>sp init</code>, on GitHub.</li>
+<li>The sample pipeline <code>sp init</code> wrote: <code>pipelines/readers-guide.yaml</code>, with its prompts <code>prompts/readers-guide.gpt</code> and <code>prompts/parallel-significance.gpt</code>, and <code>docs/tutorial.md</code>.</li>
+<li>A model API key set with <code>sp setup</code> (Lesson 1, 4.2).</li>
+</ul>
+<p>The sample's model is <code>gpt-4.1</code>, set under <code>llm_config.model</code>. Any <code>gpt</code> model that <code>sp models</code> lists will do; the workshop has been tested with OpenAI's models.</p>
+<h2 id="lesson-3-3-what-you-produce">3. What you produce</h2>
+<ul>
+<li>The sample's texts available on your machine, each under a licence you agreed to yourself.</li>
+<li>A short written account, in your own words, of what each step does and which steps cost money.</li>
+<li>A clean <code>sp lint</code> and a clean <code>--dry-run</code>.</li>
+<li>One run, on a passage you chose: a reader's guide and a parallel-significance note in <code>outputs/</code>, and their intermediates in <code>intermediate/</code>.</li>
+</ul>
+<h2 id="lesson-3-4-steps">4. Steps</h2>
+<h3 id="lesson-3-41-make-the-samples-texts-available--and-agree-to-their-licences-yourself">4.1 Make the sample's texts available — and agree to their licences yourself</h3>
+<p>The sample reads three named resources — <code>SBLGNT</code>, <code>WLC</code> and <code>BSB</code> — and the Macula syntax trees registered on them (<code>docs/tutorial.md</code> §2). See what your machine has:</p>
+<div class="sourceCode" id="lesson-3-cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-3-cb1-1"><a href="#lesson-3-cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sp</span> resource list</span></code></pre></div>
+<p><code>sp lint</code> checks that every resource a pipeline names can be opened, and <strong>offers to install what is missing</strong> (<code>docs/ai-context/sp/command-line.md</code>). Each install shows the text's licence and asks you to agree.</p>
+<p><strong>Agree to licences yourself, in your own terminal.</strong> A licence is an agreement in your name. <code>sp</code> has an option that agrees without asking (<code>--accept-terms</code>); Claude must not use it on your behalf. If Claude proposes it, say no.</p>
+<p><code>sp resource terms</code> lists the licence each text was registered under, and whether you agreed.</p>
+<h3 id="lesson-3-42-read-the-pipeline--with-claude">4.2 Read the pipeline — with Claude</h3>
+<p>Open <code>pipelines/readers-guide.yaml</code> and read it with Claude:</p>
+<blockquote>
+<p>Walk me through <code>pipelines/readers-guide.yaml</code> one step at a time. For each step, tell me what it does, what it reads, what it produces, and whether it calls a model. Don't run anything.</p>
+</blockquote>
+<p>Read it in this order:</p>
+<ol type="1">
+<li><strong>The <code>description:</code> at the top</strong> — what the pipeline is for and how to run it.</li>
+<li><strong><code>llm_config</code></strong> — which model the model steps use, and how long an answer they may write.</li>
+<li><strong><code>variables</code></strong> — the settings you can change with <code>--var</code>, such as <code>greek_frequency_cutoff</code>.</li>
+<li><strong>Each step's <code>description:</code></strong> — every step in the sample explains itself.</li>
+</ol>
+<p>Then open the two prompts. Each begins with a header saying what it <code>requires</code>; check that the step calling it supplies each one under <code>prompt.inputs</code>.</p>
+<p><strong>With your partner</strong> (or with Claude, on your own): each of you explains one step to the other without looking at Claude's explanation.</p>
+<h3 id="lesson-3-43-the-kinds-of-step">4.3 The kinds of step</h3>
+<p>The sample uses six step types. The full list of types, and every key each accepts, is in <code>docs/cli-api.json</code>; <code>docs/llmflow-language-quickref.md</code> describes the common ones.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Type</th>
+<th>What it does in the sample</th>
+<th>Calls a model?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>scripture</code></td>
+<td>Fetches a passage from a named resource — English, Greek or Hebrew — with any analyses asked for under <code>include:</code> (morphology, senses, glosses, syntax, frequency)</td>
+<td>No — free</td>
+</tr>
+<tr class="even">
+<td><code>save</code></td>
+<td>Writes something already in hand to a file</td>
+<td>No — free</td>
+</tr>
+<tr class="odd">
+<td><code>parallel-passages</code></td>
+<td>Looks the passage up in the UBS Parallel Passages database</td>
+<td>No — free</td>
+</tr>
+<tr class="even">
+<td><code>for-each</code></td>
+<td>Repeats the steps inside it once for each item in a list — here, each parallel, then each chapter</td>
+<td>No — free, unless a step inside it calls a model</td>
+</tr>
+<tr class="odd">
+<td><code>json</code></td>
+<td>Assembles a structured record from values already in hand</td>
+<td>No — free</td>
+</tr>
+<tr class="even">
+<td><code>llm</code></td>
+<td>Sends a prompt and its inputs to the model and keeps the answer</td>
+<td><strong>Yes — costs money</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Two more things you will see:</p>
+<ul>
+<li><strong><code>condition:</code></strong> skips a step unless something is true. The sample uses it to fetch the Greek <em>or</em> the Hebrew, never both, depending on the testament.</li>
+<li><strong><code>output:</code></strong> names what a step produces, so a later step can use it as <code>${name}</code>. Nothing passes between steps any other way.</li>
+</ul>
+<h3 id="lesson-3-44-what-costs-money--and-how-much">4.4 What costs money — and how much</h3>
+<p>Only the two <code>llm</code> steps cost anything: <code>reader_guide</code> and <code>significance</code>. Each sends its prompt and inputs to <code>gpt-4.1</code> and pays for the tokens in and the tokens out.</p>
+<p>For Matthew 19:1-11, the pipeline's own comment records <strong>13,331 input tokens</strong> for the guide and <strong>18,699</strong> for the significance. A longer passage, or one with more parallels, sends more. Your provider's price page turns tokens into money; your provider's usage page shows what a run actually cost.</p>
+<p><strong>Watch the <code>for-each</code> steps when you write your own pipelines.</strong> A model step inside a loop is paid once per item: a passage with twenty parallels would call it twenty times.</p>
+<p><strong><code>sp run</code> is never run on Claude's initiative.</strong> It is the one command here that costs money, so it runs only when you say so, each time. A previous "run it" does not cover the next run.</p>
+<h3 id="lesson-3-45-check-it-for-free-sp-lint-and---dry-run">4.5 Check it for free: <code>sp lint</code> and <code>--dry-run</code></h3>
+<div class="sourceCode" id="lesson-3-cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-3-cb2-1"><a href="#lesson-3-cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sp</span> lint <span class="at">--pipeline</span> pipelines/readers-guide.yaml</span>
+<span id="lesson-3-cb2-2"><a href="#lesson-3-cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">sp</span> run <span class="at">--pipeline</span> pipelines/readers-guide.yaml <span class="at">--var</span> passage=<span class="st">&quot;MAT 19:1-11&quot;</span> <span class="at">--dry-run</span></span></code></pre></div>
+<p><code>sp lint</code> catches an undeclared variable, an output a step type does not offer, a prompt whose inputs do not match its header, and a resource this machine cannot open. <code>--dry-run</code> resolves every path and variable and <strong>calls no model</strong>. Claude may run both whenever it likes.</p>
+<h3 id="lesson-3-46-run-it--when-you-decide-to">4.6 Run it — when you decide to</h3>
+<p>Choose a passage. References are written with a book code: <code>MAT 19:1-11</code>, <code>MRK 1:40-2:12</code>, <code>PSA 23</code>. (<code>docs/ai-context/sp/passage-references.md</code> lists the forms that work.) An Old Testament reference runs the Hebrew branch.</p>
+<p>Then either run it yourself, or tell Claude explicitly — <em>"Run the readers-guide pipeline on MAT 19:1-11."</em></p>
+<div class="sourceCode" id="lesson-3-cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="lesson-3-cb3-1"><a href="#lesson-3-cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">sp</span> run <span class="at">--pipeline</span> pipelines/readers-guide.yaml <span class="at">--var</span> passage=<span class="st">&quot;MAT 19:1-11&quot;</span></span></code></pre></div>
+<p>The two <code>*_frequency_cutoff</code> variables set how much help the guide gives: a word is explained when its lemma (dictionary form) is among the least frequent N% in that corpus. Set them for your own reading with <code>--var greek_frequency_cutoff=60</code>.</p>
+<h3 id="lesson-3-47-read-what-it-produced">4.7 Read what it produced</h3>
+<pre><code>outputs/
+├── 40019001-40019011-readers-guide.md
+└── 40019001-40019011-parallel-significance.md
+intermediate/
+└── 40019001-40019011/
+    ├── english.txt
+    ├── greek.json
+    ├── greek-analysis.txt
+    ├── parallels.json
+    └── parallels/</code></pre>
+<p><code>outputs/</code> holds the deliverables; <code>intermediate/</code> holds everything fetched on the way, one folder per passage, saved so each stage can be read. Commit <code>outputs/</code>; <code>intermediate/</code> is for reading.</p>
+<p><strong>Check the guide against what it was given.</strong> Pick three statements in the reader's guide — a parsed form, a gloss, what a participle attaches to — and find the evidence for each in <code>greek-analysis.txt</code> (or <code>hebrew-analysis.txt</code>). A statement you cannot trace to the input is the model speaking from memory.</p>
+<p><strong>The output is a draft.</strong> It has not been reviewed by anyone who knows the text, and it is not ready for use until a person who does has read and corrected it.</p>
+<h2 id="lesson-3-5-how-you-know-it-worked">5. How you know it worked</h2>
+<ul>
+<li><code>sp resource list</code> shows <code>SBLGNT</code>, <code>WLC</code> and <code>BSB</code>, and <code>sp resource terms</code> shows that <strong>you</strong> agreed to each licence.</li>
+<li>You can name the two steps that cost money, and say why every other step is free.</li>
+<li><code>sp lint</code> reports no errors, and the dry run completes without calling a model.</li>
+<li><code>outputs/</code> holds the guide and the significance note for the passage you chose, with its reference in the filenames.</li>
+<li>You traced three statements in the guide to lines in the analysis file — or found one you could not trace, and can say what that means.</li>
+</ul>
+<h2 id="lesson-3-6-non-goals">6. Non-goals</h2>
+<ul>
+<li>Writing or changing a pipeline or a prompt.</li>
+<li>Choosing between models, or tuning their settings.</li>
+<li>Finding and downloading other datasets — Lesson 4.</li>
+<li>Reviewing the guide as a scholar would. That is the work the guide exists to support, not part of this lesson.</li>
+</ul>
+<h2 id="lesson-3-7-teaching-this-lesson">7. Teaching this lesson</h2>
+<h3 id="lesson-3-before-the-day">Before the day</h3>
+<ul>
+<li>Remind participants to bring an OpenAI API key (Lesson 1, §2).</li>
+<li>Run <code>sp lint</code> on the sample on a clean machine shortly before, so you know how long the text installs take and what the licence prompts look like.</li>
+<li>Run the pipeline once on the passage you will demonstrate, and note what it cost from your provider's usage page, so you can tell the room a real figure.</li>
+<li>Pick two passages for the room: one New Testament with parallels (Matthew 19:1-11 is the documented example) and one Old Testament.</li>
+</ul>
+<h3 id="lesson-3-introducing-each-step">Introducing each step</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Say</th>
+<th>Rough time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>—</td>
+<td>"A pipeline spends your money and writes files in your name. Today you'll learn to say exactly what one will do before it does it."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.1</td>
+<td>"The sample reads three texts. Installing them means agreeing to their licences — and that agreement is yours, not Claude's."</td>
+<td>15 min</td>
+</tr>
+<tr class="odd">
+<td>4.2</td>
+<td>"Read the pipeline the way you'd read a method section: what goes in, what's done to it, what comes out. Ask Claude to walk you through it — and tell it not to run anything."</td>
+<td>25 min</td>
+</tr>
+<tr class="even">
+<td>4.3</td>
+<td>"Six kinds of step. Only one of them calls a model."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.4</td>
+<td>"Two steps cost money. Here is roughly how much, and here is the trap: a model step inside a loop."</td>
+<td>10 min</td>
+</tr>
+<tr class="even">
+<td>4.5</td>
+<td>"Two checks that cost nothing. Run them every time before you run the real thing."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.6</td>
+<td>"Now you choose a passage and decide to run it. Notice that you have to say so — Claude won't do it on its own."</td>
+<td>15 min</td>
+</tr>
+<tr class="even">
+<td>4.7</td>
+<td>"Read the guide against what the model was given. Anything you can't trace to the input came from its memory."</td>
+<td>20 min</td>
+</tr>
+</tbody>
+</table>
+<p>The times are estimates, about two hours in all; correct them from experience.</p>
+<h3 id="lesson-3-where-people-get-stuck">Where people get stuck</h3>
+<ul>
+<li><strong><code>sp lint</code> reports a resource it cannot open.</strong> The text is not installed. Let <code>sp lint</code> offer to install it, in the participant's own terminal, so they see and agree to the licence.</li>
+<li><strong>The run fails to authenticate with the model.</strong> The OpenAI key is missing or mistyped. <code>sp setup</code> in the participant's own terminal.</li>
+<li><strong>A reference is not recognised.</strong> Book names must be codes (<code>MAT</code>, not <code>Matthew</code>), and a range may cross a chapter but not a book — see <code>passage-references.md</code>.</li>
+<li><strong>Claude offers to run the pipeline.</strong> Good: it should offer. It should not run it until told. If it runs one unasked, stop and discuss it in the room — it is the failure this lesson is about.</li>
+<li><strong><code>outputs/</code> is empty after a run.</strong> Read the run's last lines: a failure in an earlier step stops the run before the model steps write anything. The <code>intermediate/</code> folder shows how far it got.</li>
+</ul>
+<h3 id="lesson-3-before-moving-the-room-on">Before moving the room on</h3>
+<p>Run the §5 checks out loud. Before 4.6, have one pair state which steps will cost money and why the rest are free. After 4.7, ask a pair to read out one statement from their guide and the line in the analysis file that supports it.</p>
+</section>
+<section class="lesson" id="lesson-4">
+<h1 id="lesson-4-lesson-4--the-written-record-plans-specifications-audits-issues-and-tmp">Lesson 4 — The written record: plans, specifications, audits, issues and <code>tmp/</code></h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> none yet. <strong>Track:</strong> Both. The audit step has a version for each track.</p>
+<p><strong>Audience.</strong></p>
+<ul>
+<li><em>Scholars:</em> you will know where each kind of decision and finding is written down, which of them authorise work, and which are yours to make.</li>
+<li><em>Technical participants:</em> the same, plus the naming and lifecycle conventions <code>sp</code> ships, and where they disagree.</li>
+</ul>
+<p><strong>Vocabulary.</strong></p>
+<ul>
+<li><strong>Plan</strong> — a working document describing a piece of work before it is done: <code>project/plans/&lt;topic&gt;-plan.md</code>.</li>
+<li><strong>Specification (spec)</strong> — a durable statement of what something must do, consulted every time it is rebuilt. Unlike a plan, it does not expire when the work is done.</li>
+<li><strong>Example</strong> — a worked input and output that shows a model what is wanted. A wrong one teaches the wrong thing on every run, so it is treated like a specification.</li>
+<li><strong>AI context</strong> — <code>docs/ai-context/</code>, the documents Claude reads to learn the project. Your project's own half is <code>docs/ai-context/project/</code>.</li>
+<li><strong>Status</strong> — the line at the top of a plan saying whether it is <code>proposed</code> (thinking aloud) or <code>ruled</code> (decided by a person, on a date).</li>
+<li><strong>Ruling</strong> — a decision a person has made. It is permanent until overruled, and lives in <code>CHANGELOG.md</code>, or in the project's rules when it binds future work.</li>
+<li><strong>Audit</strong> — a structured check that reports what it found, with evidence. It never gives a verdict.</li>
+<li><strong>Audit record</strong> — the file an audit writes its findings to, under <code>project/audits/</code>.</li>
+<li><strong>Checklist</strong> — a short procedure for auditing one kind of artifact, written by the project.</li>
+<li><strong><code>tmp/</code></strong> — the project's folder for throwaway files: drafts, commit messages, scratch notes.</li>
+<li><strong><code>=&gt;</code></strong> — the marker under a question in a document, where the person deciding writes the answer.</li>
+</ul>
+<hr />
+<h2 id="lesson-4-0-why-this-lesson">0. Why this lesson</h2>
+<p>An AI produces documents faster than anyone can read them. Without conventions, a project fills up with plans nobody approved, findings nobody checked and drafts nobody can tell from decisions — and the next session reads all of them as if they were authoritative. This lesson is about writing things down in a way that keeps clear what was <em>proposed</em>, what was <em>found</em>, and what was <em>decided</em>, and by whom.</p>
+<h2 id="lesson-4-1-the-core-idea">1. The core idea</h2>
+<p><strong>Every document says whether it is a proposal, a finding or a decision — and only a person turns a proposal into a decision.</strong> A plan marked <code>proposed</code> is never authorisation to build. An audit reports; you decide what to do about it. An issue records a decision about what to work on, and only you create one. What lasts is the ruling, in <code>CHANGELOG.md</code>; the working documents that led to it are scratch.</p>
+<h2 id="lesson-4-2-what-you-start-with">2. What you start with</h2>
+<ul>
+<li>Lessons 1 and 2 done: your project on GitHub.</li>
+<li><strong><span class="tag sp">sp only</span></strong> Lesson 3 done: the sample pipeline run once, its output in <code>outputs/</code>.</li>
+<li>The <code>project/plans/README.md</code> and <code>project/audits/README.md</code> that <code>sp init</code> or <code>/install</code> wrote. Read both.</li>
+</ul>
+<h2 id="lesson-4-3-what-you-produce">3. What you produce</h2>
+<ul>
+<li>One plan, written by Claude, answered by you, and marked <code>ruled</code>.</li>
+<li>One short specification, drafted by Claude, approved by you, and moved into <code>docs/ai-context/project/</code>.</li>
+<li>One audit record, with every finding located — of your sample pipeline's output <strong><span class="tag sp">sp only</span></strong>, or of a file in your own project <strong><span class="tag helm">Helm only</span></strong>.</li>
+<li>One issue created by you, linked from <code>project/TODO.md</code>.</li>
+<li>A <code>tmp/</code> folder you understand, and nothing in it you did not mean to keep there.</li>
+</ul>
+<h2 id="lesson-4-4-steps">4. Steps</h2>
+<h3 id="lesson-4-41-both-before-any-change-authorize">4.1 <span class="tag both">Both</span> Before any change: <code>/authorize</code></h3>
+<p>Before Claude edits anything that matters, <code>/authorize</code> makes it stop and say:</p>
+<ol type="1">
+<li><strong>what authorises the change</strong> — an issue, your own instruction quoted exactly, or an audit finding;</li>
+<li><strong>exactly which files will change</strong>, and what will not;</li>
+<li>then it asks you: <strong>a plan file, an issue, or neither?</strong></li>
+</ol>
+<p>and it waits for your answer and your sign-off. Ask for a small change to your project — say, a different default passage in the sample <strong><span class="tag sp">sp only</span></strong>, or a new section in your project's <code>docs/ai-context/project/overview.md</code> <strong><span class="tag helm">Helm only</span></strong> — and run <code>/authorize</code> first. Notice what it asks you.</p>
+<h3 id="lesson-4-42-both-plans--proposals-until-you-rule-them">4.2 <span class="tag both">Both</span> Plans — proposals, until you rule them</h3>
+<p>Ask Claude to write a plan for a small change, in <code>project/plans/&lt;topic&gt;-plan.md</code>. Every plan:</p>
+<ul>
+<li>opens with <strong><code>Status: proposed (&lt;date&gt;)</code></strong>. <em>Proposed</em> means thinking aloud; it is <strong>never authorisation to build</strong>;</li>
+<li>asks its questions in the document, each followed by a line holding only <strong><code>=&gt;</code></strong>. <strong>You write the answers after the <code>=&gt;</code></strong>, in the file; Claude never fills one in. Your words there are the ruling, and are quoted, never reworded;</li>
+<li>becomes <strong><code>ruled (&lt;date&gt;)</code></strong> only when you say so. Only then does work start.</li>
+</ul>
+<p>Answer the plan's questions after their <code>=&gt;</code> lines and change its status yourself.</p>
+<p><strong>Plans are temporary.</strong> After about eight days a plan is either done or obsolete, and either way it goes — its rulings are already in <code>CHANGELOG.md</code>, because writing that entry is part of finishing the work. Claude lists the plans past eight days and asks; <strong>deleting one is always your decision</strong> (<code>project/plans/README.md</code>; <strong><span class="tag sp">sp only</span></strong> <code>plans-are-temporary</code> in <code>docs/ai-context/sp/rules.md</code>).</p>
+<h3 id="lesson-4-43-both-specifications--the-design-that-outlasts-the-work">4.3 <span class="tag both">Both</span> Specifications — the design that outlasts the work</h3>
+<p>A plan describes one piece of work and then expires. A <strong>specification</strong> describes what something must <em>always</em> do, and is consulted every time it is rebuilt. A model of one is the reader specification in the Ears-to-Hear project, which this workshop's own lessons are patterned on:</p>
+<ul>
+<li>a status line, and <strong>dated amendments, each with its reason</strong>, newest first;</li>
+<li>the audience, and a vocabulary;</li>
+<li>numbered sections stating requirements, each with <strong>why</strong> — often the failure that produced it;</li>
+<li><strong>non-goals</strong>: what it deliberately does not do;</li>
+<li>how compliance is <strong>checked</strong>, preferably by a test.</li>
+</ul>
+<p>When a spec and the code disagree, the spec wins and the code is wrong.</p>
+<p><strong>Claude drafts; you approve; then Claude moves it into the AI context.</strong> Claude is encouraged to draft specifications — and examples for prompts, which work the same way. A draft is only a proposal. Once you have approved it, Claude moves it into <code>docs/ai-context/project/</code>, where every later session reads it as part of the project. Nothing enters the AI context unapproved, because whatever is there is what Claude will treat as true.</p>
+<p>Ask Claude to draft a one-page specification for something small in your project — what a file must contain, say. Read it, change what is wrong, approve it, and have Claude move it.</p>
+<h3 id="lesson-4-44-both-audits--findings-never-verdicts">4.4 <span class="tag both">Both</span> Audits — findings, never verdicts</h3>
+<p><strong><span class="tag sp">sp only</span></strong> Run <code>/audit-output</code> on the reader's guide your sample pipeline produced in Lesson 3. It traces each statement in the output back to what the model was given, and grades how much latitude the model had to invent (<code>docs/ai-context/sp/audits-pattern.md</code>). It writes its record to <code>project/audits/</code>.</p>
+<p><strong><span class="tag helm">Helm only</span></strong> Human at the Helm ships no audit skills; an audit starts from a checklist you write. Write three checks for one file in your project — for example, that every rule in <code>docs/ai-context/project/rules.md</code> says <em>why</em> — and ask Claude to audit the file against them and write the record to <code>project/audits/</code>, with the date in its filename.</p>
+<p>Then read the record. A good record:</p>
+<ul>
+<li>quotes <strong>exact text and locations</strong> for every finding, so you can check each in one step;</li>
+<li>says <strong>how deep the audit went</strong> — what was read in full, what was sampled, what was not examined;</li>
+<li>carries <strong>no verdict</strong>. "Approved", "needs attention" and "production ready" are decisions, and decisions are yours.</li>
+</ul>
+<p><strong>Audits are diagnostic, not gates.</strong> You run one when you want to know something; its findings often become the plan or the issue that authorises the next change.</p>
+<p><strong><span class="tag sp">sp only</span></strong> The four audit skills, by what you are looking at:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Looking at</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>generated output — did the model use what it was given?</td>
+<td><code>/audit-output</code></td>
+</tr>
+<tr class="even">
+<td>prompts and pipeline YAML</td>
+<td><code>/audit-prompts</code></td>
+</tr>
+<tr class="odd">
+<td>the contracts between steps</td>
+<td><code>/audit-pipeline</code></td>
+</tr>
+<tr class="even">
+<td>Python plugins</td>
+<td><code>/audit-code</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="lesson-4-45-both-issues--a-decision-about-what-to-work-on">4.5 <span class="tag both">Both</span> Issues — a decision about what to work on</h3>
+<p>An issue is where a piece of work is proposed, discussed and tracked, and its thread keeps the whole history of a design decision. <strong>Only you create issues</strong> (Lesson 2, 4.5): Claude drafts one into <code>tmp/</code>, you edit it and create it with <code>gh issue create --body-file</code>.</p>
+<p>Turn one finding from your audit into an issue. Then link it from <code>project/TODO.md</code> as <code>→ #N</code> — a link, not a copy.</p>
+<h3 id="lesson-4-46-both-tmp--throwaway-but-not-anyones-to-sweep">4.6 <span class="tag both">Both</span> <code>tmp/</code> — throwaway, but not anyone's to sweep</h3>
+<p><code>tmp/</code> holds only throwaway files: issue drafts, commit messages from <code>/stage-commits</code>, scratch notes. It is normally kept out of git, so nothing in it reaches a commit by accident.</p>
+<p>Two things follow:</p>
+<ul>
+<li><strong>Nothing that must survive belongs in <code>tmp/</code>.</strong> A draft you want to keep becomes a plan, an issue, or a document the project's map names.</li>
+<li><strong>Never clear <code>tmp/</code> with a wildcard.</strong> It may hold another session's only copy of a draft. Files are deleted by name, by whoever made them, once they have done their job.</li>
+</ul>
+<h3 id="lesson-4-47-both-where-everything-lives">4.7 <span class="tag both">Both</span> Where everything lives</h3>
+<table>
+<thead>
+<tr class="header">
+<th>What</th>
+<th>Where</th>
+<th>Lifetime</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Plans</td>
+<td><code>project/plans/&lt;topic&gt;-plan.md</code></td>
+<td>about eight days, then deleted on your word</td>
+</tr>
+<tr class="even">
+<td>Specifications and examples, once approved</td>
+<td><code>docs/ai-context/project/</code></td>
+<td>until replaced</td>
+</tr>
+<tr class="odd">
+<td>Audit records</td>
+<td><code>project/audits/</code>, with the date in the filename</td>
+<td>one per audit</td>
+</tr>
+<tr class="even">
+<td>Audit checklists</td>
+<td>wherever the project keeps its own documents, named in <code>docs/ai-context/project/index.md</code></td>
+<td>until replaced</td>
+</tr>
+<tr class="odd">
+<td>Work to do</td>
+<td>GitHub issues, linked from <code>project/TODO.md</code></td>
+<td>until closed</td>
+</tr>
+<tr class="even">
+<td>Rulings</td>
+<td><code>CHANGELOG.md</code>, or the project's <code>rules.md</code></td>
+<td>permanent</td>
+</tr>
+<tr class="odd">
+<td>Throwaway files</td>
+<td><code>tmp/</code></td>
+<td>deleted by name when done</td>
+</tr>
+</tbody>
+</table>
+<h2 id="lesson-4-5-how-you-know-it-worked">5. How you know it worked</h2>
+<ul>
+<li><code>/authorize</code> stopped before editing and asked you: plan, issue, or neither.</li>
+<li>Your plan has your answers after its <code>=&gt;</code> lines, in your words, and its status is <code>ruled (&lt;date&gt;)</code> — set by you.</li>
+<li>Your specification is in <code>docs/ai-context/project/</code>, and you approved it before it got there.</li>
+<li>Your audit record quotes a location for every finding and contains no verdict.</li>
+<li>Your issue is authored by you and linked from <code>project/TODO.md</code> as <code>→ #N</code>.</li>
+<li><code>CHANGELOG.md</code> carries the ruling from your plan, dated.</li>
+</ul>
+<h2 id="lesson-4-6-non-goals">6. Non-goals</h2>
+<ul>
+<li>Writing an audit checklist of your own.</li>
+<li>Testing prompt changes with <code>sp tools replay</code>.</li>
+<li>Deleting plans: the eight-day rule is introduced here, and practised as plans age.</li>
+</ul>
+<h2 id="lesson-4-7-teaching-this-lesson">7. Teaching this lesson</h2>
+<h3 id="lesson-4-before-the-day">Before the day</h3>
+<ul>
+<li><strong><span class="tag sp">sp only</span></strong> Make sure every participant has a sample-pipeline output from Lesson 3 to audit. If some do not, keep a copy of yours they can use.</li>
+<li><strong><span class="tag helm">Helm only</span></strong> Have an example three-item checklist ready for participants who cannot think of one.</li>
+<li>Read <code>project/plans/README.md</code> and <code>project/audits/README.md</code> yourself — and, <strong><span class="tag sp">sp only</span></strong>, <code>docs/ai-context/sp/audits-pattern.md</code>; participants' questions come from them.</li>
+</ul>
+<h3 id="lesson-4-introducing-each-step">Introducing each step</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Say</th>
+<th>Rough time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>—</td>
+<td>"AI writes faster than anyone reads. Today is about writing things down so it stays clear what was proposed, what was found, and what was decided — and by whom."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.1</td>
+<td>"Before Claude changes anything, it should tell you what authorises it and exactly what it will touch — and ask how you want it recorded."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.2</td>
+<td>"A plan is a proposal until you rule on it. You answer its questions after the <code>=&gt;</code>, in your own words."</td>
+<td>25 min</td>
+</tr>
+<tr class="even">
+<td>4.3</td>
+<td>"A spec is a plan that never expires: the standing description of what something must do. These lessons are written as one."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.4</td>
+<td>"An audit reports what it found, with evidence. It never tells you whether it's good — that's yours."</td>
+<td>25 min</td>
+</tr>
+<tr class="even">
+<td>4.5</td>
+<td>"A finding becomes work when you decide it should. That's an issue, and you create it."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.6–4.7</td>
+<td>"<code>tmp/</code> is scratch. And here is where everything else lives."</td>
+<td>10 min</td>
+</tr>
+</tbody>
+</table>
+<p>The times are estimates, about an hour and a half in all; correct them from experience.</p>
+<h3 id="lesson-4-where-people-get-stuck">Where people get stuck</h3>
+<ul>
+<li><strong>Claude answers its own question after a <code>=&gt;</code>.</strong> Delete its answer, and point to the rule: only the person deciding writes there.</li>
+<li><strong>Claude starts building from a <code>proposed</code> plan.</strong> Stop it. The status is the point of 4.2.</li>
+<li><strong>The audit record says "looks good" or "approved".</strong> That is a verdict; ask Claude to remove it and state findings only.</li>
+<li><strong>Someone asks Claude to clean up <code>tmp/</code>.</strong> It should delete by name only, files it made itself.</li>
+<li><strong>Plans pile up.</strong> Show that deleting one loses nothing: <code>git log</code> and <code>git show</code> still have it.</li>
+</ul>
+<h3 id="lesson-4-before-moving-the-room-on">Before moving the room on</h3>
+<p>Run the §5 checks out loud. Ask one pair to read a question from their plan and the answer they wrote after its <code>=&gt;</code>, and another to read a finding from their audit with the location it cites.</p>
+</section>
+<section class="lesson" id="lesson-5">
+<h1 id="lesson-5-lesson-5--drift-how-an-ai-ends-up-in-charge-and-how-sp-guards-against-it">Lesson 5 — Drift: how an AI ends up in charge, and how <code>sp</code> guards against it</h1>
+<p><strong>Status:</strong> proposed (2026-10-07) <strong>Amendments:</strong> none yet. <strong>Track:</strong> Both. Step 4.3 has a version for each track; lines that differ are labelled.</p>
+<p><strong>Audience.</strong></p>
+<ul>
+<li><em>Scholars:</em> you will recognise the ways an AI quietly takes decisions that are yours, name them when they happen, and know what to do next.</li>
+<li><em>Technical participants:</em> the same, plus which of <code>sp</code>'s guards are enforced by the machine and which hold only while the model pays attention to them.</li>
+</ul>
+<p><strong>Vocabulary.</strong></p>
+<ul>
+<li><strong>Drift</strong> — the gradual shift of control from you to the AI, one helpful-looking step at a time.</li>
+<li><strong>Drift pattern</strong> — one named, recognisable way drift happens, such as <em>scope expansion</em> or <em>false memory</em>.</li>
+<li><strong>Guard</strong> — anything that prevents or exposes a drift pattern.</li>
+<li><strong>Gate</strong> — a guard that stops an act <em>before</em> it happens, such as a permission rule that makes Claude ask before running a command.</li>
+<li><strong>Instruction</strong> — a guard that is only text the model is asked to follow: <code>CLAUDE.md</code>, the rules, a skill. It works only while the model attends to it.</li>
+<li><strong>Human at the Helm</strong> — the methodology these guards come from, published at <a href="https://github.com/nida-institute/human-at-the-helm">github.com/nida-institute/human-at-the-helm</a>.</li>
+</ul>
+<hr />
+<h2 id="lesson-5-0-why-this-lesson">0. Why this lesson</h2>
+<p>None of the drift patterns looks like a failure while it is happening. Each looks like help: fixing something nearby, offering the best option, reporting that everything passed, recalling what you agreed earlier. You have spent four lessons using guards against them without naming them. This lesson names the patterns, so you can see them, and shows which guards actually stop them and which only ask the model to behave.</p>
+<h2 id="lesson-5-1-the-core-idea">1. The core idea</h2>
+<p><strong>Drift looks like helpfulness, and most guards against it are instructions, not locks.</strong> A rule in <code>CLAUDE.md</code> holds only while the model attends to it; a long session, a compacted context or a different tool can lose it without anyone noticing. So the last guard is always you: knowing the patterns, keeping the acts that carry your name in your own hands, and checking claims against the files rather than taking them on trust.</p>
+<h2 id="lesson-5-2-what-you-start-with">2. What you start with</h2>
+<ul>
+<li>Lessons 1–4 done.</li>
+<li><a href="https://github.com/nida-institute/human-at-the-helm/blob/main/drift-patterns.md"><code>drift-patterns.md</code></a> from Human at the Helm. Read it before the lesson if you can; it takes about twenty minutes. <strong><span class="tag helm">Helm only</span></strong> <code>/install</code> put a copy in your project at <code>docs/ai-context/helm/drift-patterns.md</code>.</li>
+<li>Your project's rules, which you first read in Lesson 2: <strong><span class="tag sp">sp only</span></strong> <code>docs/ai-context/sp/rules.md</code>; <strong><span class="tag helm">Helm only</span></strong> <code>docs/ai-context/project/rules.md</code> and <code>docs/ai-context/helm/disciplines/</code>.</li>
+</ul>
+<h2 id="lesson-5-3-what-you-produce">3. What you produce</h2>
+<ul>
+<li>A written example, from your own sessions in Lessons 1–4, of at least one drift pattern, with the guard that caught it — or that should have.</li>
+<li>A list, for your own machine, of which <code>sp</code> rules are enforced and which are instructions only.</li>
+<li>One use of <code>/stand-down</code>.</li>
+</ul>
+<h2 id="lesson-5-4-steps">4. Steps</h2>
+<h3 id="lesson-5-41-both-the-patterns">4.1 <span class="tag both">Both</span> The patterns</h3>
+<p><code>drift-patterns.md</code> groups them into six families. One line each:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Family</th>
+<th>What happens</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Authority fabrication</strong></td>
+<td>The AI invents reasons to be trusted</td>
+<td>treats its own old comment as a design decision; "as we agreed earlier…" about something never agreed; misquotes a file and defends the misquote</td>
+</tr>
+<tr class="even">
+<td><strong>Framing</strong></td>
+<td>The AI substitutes its idea of your goal for your goal</td>
+<td>restates your question narrower; offers "the best approach" instead of options; renames your concepts</td>
+</tr>
+<tr class="odd">
+<td><strong>Scope and momentum</strong></td>
+<td>The AI does more than was asked</td>
+<td>"while I'm here I also…"; adds things you'll "probably need"; "now is a good time to…"</td>
+</tr>
+<tr class="even">
+<td><strong>Reporting</strong></td>
+<td>The AI misstates what was done</td>
+<td>"tests pass" when some ran; "it works" when the happy path worked</td>
+</tr>
+<tr class="odd">
+<td><strong>Overwhelm</strong></td>
+<td>Volume replaces evaluation</td>
+<td>a wall of options you approve unread; "should I go ahead?" after it already has</td>
+</tr>
+<tr class="even">
+<td><strong>Persona</strong></td>
+<td>The AI performs experience or feeling</td>
+<td>"in my experience…"; "most scholars think…"; apologies and promises in place of a correction</td>
+</tr>
+</tbody>
+</table>
+<p><strong>With your partner</strong> (on your own, with Claude): each choose one family and explain it to the other with an example of your own.</p>
+<h3 id="lesson-5-42-both-the-guards-you-have-already-used">4.2 <span class="tag both">Both</span> The guards you have already used</h3>
+<p>Every lesson so far put a guard against one or more patterns in your hands:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Pattern</th>
+<th>Guard</th>
+<th>Lesson</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>The AI working from habit instead of the project's rules</td>
+<td><code>/load-context</code> at the start of every session</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Context loss, unnoticed</td>
+<td><code>/health-check</code>, which lists every correction one by one</td>
+<td>1</td>
+</tr>
+<tr class="odd">
+<td>False memory between sessions</td>
+<td><code>/handoff</code> — what the next session knows is what is written</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Optimism in reporting</td>
+<td><code>/stage-commits</code> shows the actual staged diff; §5 checks you carry out yourself</td>
+<td>1, every lesson</td>
+</tr>
+<tr class="odd">
+<td>Acts carrying your name done for you</td>
+<td>only you create issues, commit, push and open pull requests</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><strong><span class="tag sp">sp only</span></strong> Spending and agreeing in your name</td>
+<td>only you agree to licences and decide when <code>sp run</code> runs</td>
+<td>3</td>
+</tr>
+<tr class="odd">
+<td>AI work indistinguishable from yours</td>
+<td>the agent account and author name</td>
+<td>2</td>
+</tr>
+<tr class="even">
+<td><strong><span class="tag sp">sp only</span></strong> Ungrounded output</td>
+<td>trace the guide back to its input; <code>/audit-output</code></td>
+<td>3, 4</td>
+</tr>
+<tr class="odd">
+<td>Scope expansion, the helpful addition</td>
+<td><code>/authorize</code>: what authorises this, exactly what changes, what does not</td>
+<td>4</td>
+</tr>
+<tr class="even">
+<td>Decision laundering, circular authority</td>
+<td><code>Status: proposed</code> until you rule; your answers after <code>=&gt;</code>; audits carry no verdict</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<h3 id="lesson-5-43-both-enforced-or-only-asked">4.3 <span class="tag both">Both</span> Enforced, or only asked?</h3>
+<p><strong><span class="tag both">Both</span> Neither installer adds any gates.</strong> <code>sp init</code> and Helm's <code>/install</code> write rules, AI context and skills — instructions, all of them. Whether anything on your machine actually stops an act depends on your own <code>~/.claude/settings.json</code>. Ask Claude to read yours and list which commands, if any, it must ask you about before running.</p>
+<p><strong><span class="tag helm">Helm only</span></strong> Read <code>docs/ai-context/helm/disciplines/README.md</code>. It separates the short operational rules a session is held to from the longer essays explaining the failures behind them. Every one of them is an instruction unless your settings gate it.</p>
+<p><strong><span class="tag sp">sp only</span></strong> <code>docs/ai-context/sp/rules.md</code> sorts its own rules into three groups. Open it and find them:</p>
+<ol type="1">
+<li><strong>Rules a gate stops before the act</strong> — e.g. <code>commit-authority</code>, <code>issues-need-approval</code>. These are the strongest: the act is refused or put in front of you first. But read the note at the top of that section: <strong>the gate lives in your own Claude Code settings, not in the project.</strong> On a machine where nobody configured it, the rule is only an instruction.</li>
+<li><strong>Rules a test can catch</strong> — checked by Scripture Pipelines' own test suite, and some of them by <code>sp lint</code> in your project.</li>
+<li><strong>Rules no test can catch</strong> — the file's own words: "they hold only while they are actually in attention." These are the ones to carry yourself.</li>
+</ol>
+<p><em>Adding gates of your own: this part of the lesson is still to be written.</em></p>
+<h3 id="lesson-5-44-both-where-the-guards-do-not-reach">4.4 <span class="tag both">Both</span> Where the guards do not reach</h3>
+<p>Recall Lesson 1, 4.10: <strong>Cowork reads a project's <code>CLAUDE.md</code> and nothing else</strong> — not your settings, not your hooks, not your skills. Chat reads none of it. The same is true of any other tool that edits your files. Outside Claude Code, every guard in this lesson is at most an instruction, and most are absent.</p>
+<p>The acts that are yours stay yours there too, and for a mechanical reason: they need your own credentials, in your own terminal.</p>
+<h3 id="lesson-5-45-both-when-drift-has-happened-stand-down">4.5 <span class="tag both">Both</span> When drift has happened: <code>/stand-down</code></h3>
+<p>When you notice the AI has been steering — deciding things you did not ask it to, narrowing your options, running ahead — type <code>/stand-down</code>. It names what happened and resets who is in charge.</p>
+<p>What does <em>not</em> work, according to <code>drift-patterns.md</code>:</p>
+<ul>
+<li><strong>accepting an apology and carrying on</strong> — the model has no way to keep the promise;</li>
+<li><strong>arguing</strong> — each defence adds more of the wrong position to the conversation.</li>
+</ul>
+<p>What does: redirect ("set that aside; here is what I want"), paste the actual file when the dispute is about what it says, or <strong>start a fresh session</strong> — <code>/handoff</code>, <code>/exit</code>, restart, <code>/load-context</code>. That cycle from Lesson 1 is also the strongest reset there is.</p>
+<h3 id="lesson-5-46-both-find-one-in-your-own-sessions">4.6 <span class="tag both">Both</span> Find one in your own sessions</h3>
+<p>Look back over your sessions in Lessons 1–4 — Claude Code keeps them: <code>claude --resume</code> lists them in the terminal, and the sidebar lists them in the app. Find one moment that matches a pattern in 4.1. Write down:</p>
+<ul>
+<li>what the AI said or did, quoted;</li>
+<li>which pattern it is;</li>
+<li>which guard caught it — or which would have.</li>
+</ul>
+<p>If you find none, ask Claude to propose a change to your project with no <code>/authorize</code>, and watch what it does.</p>
+<h2 id="lesson-5-5-how-you-know-it-worked">5. How you know it worked</h2>
+<ul>
+<li>You can name the six families, and give an example of one from your own sessions, quoted.</li>
+<li>You can say which of your project's rules are enforced on <em>your</em> machine, and how you know — from your own <code>settings.json</code>, not from what the rules say about themselves.</li>
+<li>You can say why Cowork and Chat are outside these guards.</li>
+<li>You have used <code>/stand-down</code> once and can say what it changed.</li>
+</ul>
+<h2 id="lesson-5-6-non-goals">6. Non-goals</h2>
+<ul>
+<li>Writing rules, skills or hooks of your own.</li>
+<li>The full Human at the Helm methodology — <code>adopting.md</code> in that repository covers it.</li>
+<li>Changing what Scripture Pipelines ships. Disagreements between its files are reported to it, not worked around (Lesson 2, 4.9).</li>
+</ul>
+<h2 id="lesson-5-7-teaching-this-lesson">7. Teaching this lesson</h2>
+<h3 id="lesson-5-before-the-day">Before the day</h3>
+<ul>
+<li>Ask participants to read <code>drift-patterns.md</code> beforehand.</li>
+<li>Collect two or three examples of drift from your own sessions, quoted, to show the room. Real examples land far better than described ones.</li>
+<li>Know what your own <code>~/.claude/settings.json</code> gates, so you can show one that does and contrast a fresh one that does not.</li>
+</ul>
+<h3 id="lesson-5-introducing-each-step">Introducing each step</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Say</th>
+<th>Rough time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>—</td>
+<td>"Every drift pattern looks like help while it's happening. Today we name them."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.1</td>
+<td>"Six families. You've probably already seen most of them this week."</td>
+<td>25 min</td>
+</tr>
+<tr class="odd">
+<td>4.2</td>
+<td>"Every lesson so far gave you a guard. Here's what each one was guarding against."</td>
+<td>10 min</td>
+</tr>
+<tr class="even">
+<td>4.3</td>
+<td>"Most guards are instructions the model is asked to follow. Let's find out which ones on your machine actually stop anything."</td>
+<td>20 min</td>
+</tr>
+<tr class="odd">
+<td>4.4</td>
+<td>"Outside Claude Code, almost none of this applies."</td>
+<td>5 min</td>
+</tr>
+<tr class="even">
+<td>4.5</td>
+<td>"When it has happened: redirect, paste the file, or start fresh. Don't accept the apology."</td>
+<td>10 min</td>
+</tr>
+<tr class="odd">
+<td>4.6</td>
+<td>"Find one in your own sessions. Quote it."</td>
+<td>20 min</td>
+</tr>
+</tbody>
+</table>
+<p>The times are estimates, about an hour and a half in all; correct them from experience.</p>
+<h3 id="lesson-5-where-people-get-stuck">Where people get stuck</h3>
+<ul>
+<li><strong>"Claude never did any of that to me."</strong> Usually it did, gently. Point them at the smallest patterns: a summary longer than the question, "great question", an option menu with one option clearly preferred.</li>
+<li><strong>Treating the rules file as proof of enforcement.</strong> The file says what is <em>meant</em> to be gated; only <code>settings.json</code> says what is. Have them read their own.</li>
+<li><strong>Expecting <code>/stand-down</code> to fix the model.</strong> It resets the working relationship in this session; it does not change the model. A fresh session is often the better reset.</li>
+</ul>
+<h3 id="lesson-5-before-moving-the-room-on">Before moving the room on</h3>
+<p>Run the §5 checks out loud. Ask two pairs to read out their quoted example and name its pattern; let the room say whether they agree.</p>
+</section>
+</main>
+</body>
+</html>
